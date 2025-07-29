@@ -1,0 +1,17 @@
+{
+  "project": "flink",
+  "jira_id": "18428",
+  "commit": "95b9adbe",
+  "classification": {
+    "singleLine": false
+  },
+  "patch": "diff --git a/flink-streaming-scala/src/main/scala/org/apache/flink/streaming/api/scala/StreamExecutionEnvironment.scala b/flink-streaming-scala/src/main/scala/org/apache/flink/streaming/api/scala/StreamExecutionEnvironment.scala\nindex 925d571c546..9ab3acf8036 100644\n--- a/flink-streaming-scala/src/main/scala/org/apache/flink/streaming/api/scala/StreamExecutionEnvironment.scala\n+++ b/flink-streaming-scala/src/main/scala/org/apache/flink/streaming/api/scala/StreamExecutionEnvironment.scala\n@@ -666,13 +666,13 @@ class StreamExecutionEnvironment(javaEnv: JavaEnv) {\n     * Create a DataStream using a [[Source]].\n     */\n   @Experimental\n-  def continuousSource[T: TypeInformation](\n+  def fromSource[T: TypeInformation](\n       source: Source[T, _ <: SourceSplit, _],\n       watermarkStrategy: WatermarkStrategy[T],\n       sourceName: String): DataStream[T] = {\n \n     val typeInfo = implicitly[TypeInformation[T]]\n-    asScalaStream(javaEnv.continuousSource(source, watermarkStrategy, sourceName, typeInfo))\n+    asScalaStream(javaEnv.fromSource(source, watermarkStrategy, sourceName, typeInfo))\n   }\n \n   /**\n",
+  "files": 1,
+  "linesAdd": 2,
+  "linesRem": 2,
+  "failing_tests": [],
+  "nb_test": 0,
+  "nb_failure": 0,
+  "nb_error": 0,
+  "nb_skipped": 0
+}

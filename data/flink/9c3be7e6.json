@@ -1,0 +1,19 @@
+{
+  "project": "flink",
+  "jira_id": "26819",
+  "commit": "9c3be7e6",
+  "classification": {
+    "singleLine": false
+  },
+  "patch": "diff --git a/flink-table/flink-table-runtime/src/main/java/org/apache/flink/table/runtime/operators/rank/AppendOnlyFirstNFunction.java b/flink-table/flink-table-runtime/src/main/java/org/apache/flink/table/runtime/operators/rank/AppendOnlyFirstNFunction.java\nindex 581f24c8ec7..df289b5b98a 100644\n--- a/flink-table/flink-table-runtime/src/main/java/org/apache/flink/table/runtime/operators/rank/AppendOnlyFirstNFunction.java\n+++ b/flink-table/flink-table-runtime/src/main/java/org/apache/flink/table/runtime/operators/rank/AppendOnlyFirstNFunction.java\n@@ -89,7 +89,7 @@ public class AppendOnlyFirstNFunction extends AbstractTopNFunction {\n         currentRank += 1;\n         state.update(currentRank);\n \n-        if (outputRankNumber) {\n+        if (outputRankNumber || hasOffset()) {\n             collectInsert(out, input, currentRank);\n         } else {\n             collectInsert(out, input);\n",
+  "files": 1,
+  "linesAdd": 1,
+  "linesRem": 1,
+  "failing_tests": [
+    "org.apache.flink.table.runtime.operators.rank.AppendOnlyFirstNFunctionTest.testConstantRankRangeWithOffset"
+  ],
+  "nb_test": 1255,
+  "nb_failure": 1,
+  "nb_error": 0,
+  "nb_skipped": 2
+}

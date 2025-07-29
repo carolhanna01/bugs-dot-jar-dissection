@@ -1,0 +1,20 @@
+{
+  "project": "flink",
+  "jira_id": "9789",
+  "commit": "2fbe562d",
+  "classification": {
+    "singleLine": false
+  },
+  "patch": "diff --git a/flink-streaming-java/src/main/java/org/apache/flink/streaming/runtime/tasks/OneInputStreamTask.java b/flink-streaming-java/src/main/java/org/apache/flink/streaming/runtime/tasks/OneInputStreamTask.java\nindex 43eab24bac9..74985186836 100644\n--- a/flink-streaming-java/src/main/java/org/apache/flink/streaming/runtime/tasks/OneInputStreamTask.java\n+++ b/flink-streaming-java/src/main/java/org/apache/flink/streaming/runtime/tasks/OneInputStreamTask.java\n@@ -93,7 +93,8 @@ public class OneInputStreamTask<IN, OUT> extends StreamTask<OUT, OneInputStreamO\n \t\t\t\t\tinputWatermarkGauge);\n \t\t}\n \t\theadOperator.getMetricGroup().gauge(MetricNames.IO_CURRENT_INPUT_WATERMARK, this.inputWatermarkGauge);\n-\t\tgetEnvironment().getMetricGroup().gauge(MetricNames.IO_CURRENT_INPUT_WATERMARK, this.inputWatermarkGauge);\n+\t\t// wrap watermark gauge since registered metrics must be unique\n+\t\tgetEnvironment().getMetricGroup().gauge(MetricNames.IO_CURRENT_INPUT_WATERMARK, this.inputWatermarkGauge::getValue);\n \t}\n \n \t@Override\ndiff --git a/flink-streaming-java/src/main/java/org/apache/flink/streaming/runtime/tasks/OperatorChain.java b/flink-streaming-java/src/main/java/org/apache/flink/streaming/runtime/tasks/OperatorChain.java\nindex c105ad71b3e..015b7db9436 100644\n--- a/flink-streaming-java/src/main/java/org/apache/flink/streaming/runtime/tasks/OperatorChain.java\n+++ b/flink-streaming-java/src/main/java/org/apache/flink/streaming/runtime/tasks/OperatorChain.java\n@@ -381,8 +381,9 @@ public class OperatorChain<OUT, OP extends StreamOperator<OUT>> implements Strea\n \t\t\tcurrentOperatorOutput = new CopyingChainingOutput<>(chainedOperator, inSerializer, outputTag, this);\n \t\t}\n \n-\t\tchainedOperator.getMetricGroup().gauge(MetricNames.IO_CURRENT_INPUT_WATERMARK, currentOperatorOutput.getWatermarkGauge());\n-\t\tchainedOperator.getMetricGroup().gauge(MetricNames.IO_CURRENT_OUTPUT_WATERMARK, chainedOperatorOutput.getWatermarkGauge());\n+\t\t// wrap watermark gauges since registered metrics must be unique\n+\t\tchainedOperator.getMetricGroup().gauge(MetricNames.IO_CURRENT_INPUT_WATERMARK, currentOperatorOutput.getWatermarkGauge()::getValue);\n+\t\tchainedOperator.getMetricGroup().gauge(MetricNames.IO_CURRENT_OUTPUT_WATERMARK, chainedOperatorOutput.getWatermarkGauge()::getValue);\n \n \t\treturn currentOperatorOutput;\n \t}\ndiff --git a/flink-streaming-java/src/main/java/org/apache/flink/streaming/runtime/tasks/TwoInputStreamTask.java b/flink-streaming-java/src/main/java/org/apache/flink/streaming/runtime/tasks/TwoInputStreamTask.java\nindex 93a56752e12..546ccdb3bfc 100644\n--- a/flink-streaming-java/src/main/java/org/apache/flink/streaming/runtime/tasks/TwoInputStreamTask.java\n+++ b/flink-streaming-java/src/main/java/org/apache/flink/streaming/runtime/tasks/TwoInputStreamTask.java\n@@ -105,7 +105,8 @@ public class TwoInputStreamTask<IN1, IN2, OUT> extends StreamTask<OUT, TwoInputS\n \t\theadOperator.getMetricGroup().gauge(MetricNames.IO_CURRENT_INPUT_WATERMARK, minInputWatermarkGauge);\n \t\theadOperator.getMetricGroup().gauge(MetricNames.IO_CURRENT_INPUT_1_WATERMARK, input1WatermarkGauge);\n \t\theadOperator.getMetricGroup().gauge(MetricNames.IO_CURRENT_INPUT_2_WATERMARK, input2WatermarkGauge);\n-\t\tgetEnvironment().getMetricGroup().gauge(MetricNames.IO_CURRENT_INPUT_WATERMARK, minInputWatermarkGauge);\n+\t\t// wrap watermark gauge since registered metrics must be unique\n+\t\tgetEnvironment().getMetricGroup().gauge(MetricNames.IO_CURRENT_INPUT_WATERMARK, minInputWatermarkGauge::getValue);\n \t}\n \n \t@Override\n",
+  "files": 3,
+  "linesAdd": 7,
+  "linesRem": 4,
+  "failing_tests": [
+    "org.apache.flink.streaming.runtime.tasks.OneInputStreamTaskTest.testWatermarkMetrics",
+    "org.apache.flink.streaming.runtime.tasks.TwoInputStreamTaskTest.testWatermarkMetrics"
+  ],
+  "nb_test": 1043,
+  "nb_failure": 2,
+  "nb_error": 0,
+  "nb_skipped": 21
+}

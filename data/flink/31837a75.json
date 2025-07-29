@@ -1,0 +1,19 @@
+{
+  "project": "flink",
+  "jira_id": "4307",
+  "commit": "31837a75",
+  "classification": {
+    "singleLine": false
+  },
+  "patch": "diff --git a/flink-streaming-java/src/main/java/org/apache/flink/streaming/api/operators/StreamingRuntimeContext.java b/flink-streaming-java/src/main/java/org/apache/flink/streaming/api/operators/StreamingRuntimeContext.java\nindex 6a09492b1f7..863cf1726c6 100644\n--- a/flink-streaming-java/src/main/java/org/apache/flink/streaming/api/operators/StreamingRuntimeContext.java\n+++ b/flink-streaming-java/src/main/java/org/apache/flink/streaming/api/operators/StreamingRuntimeContext.java\n@@ -141,7 +141,8 @@ public class StreamingRuntimeContext extends AbstractRuntimeUDFContext {\n \t\trequireNonNull(stateProperties, \"The state properties must not be null\");\n \t\ttry {\n \t\t\tstateProperties.initializeSerializerUnlessSet(getExecutionConfig());\n-\t\t\treturn operator.getPartitionedState(stateProperties);\n+\t\t\tListState<T> originalState = operator.getPartitionedState(stateProperties);\n+\t\t\treturn new UserFacingListState<T>(originalState);\n \t\t} catch (Exception e) {\n \t\t\tthrow new RuntimeException(\"Error while getting state\", e);\n \t\t}\n",
+  "files": 1,
+  "linesAdd": 2,
+  "linesRem": 1,
+  "failing_tests": [
+    "org.apache.flink.streaming.api.operators.StreamingRuntimeContextTest.testListStateReturnsEmptyListByDefault"
+  ],
+  "nb_test": 307,
+  "nb_failure": 1,
+  "nb_error": 0,
+  "nb_skipped": 1
+}

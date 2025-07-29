@@ -6,7 +6,7 @@
 	url = https://github.com/bugs-dot-jar/camel.git
 [submodule "repositories/flink"]
 	path = repositories/flink
-	url = https://github.com/bugs-dot-jar/flink.git
+	url = https://github.com/carolhanna01/flink.git
 [submodule "repositories/commons-math"]
 	path = repositories/commons-math
 	url = https://github.com/bugs-dot-jar/commons-math.git

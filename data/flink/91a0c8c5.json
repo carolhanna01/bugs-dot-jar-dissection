@@ -1,0 +1,19 @@
+{
+  "project": "flink",
+  "jira_id": "17552",
+  "commit": "91a0c8c5",
+  "classification": {
+    "singleLine": false
+  },
+  "patch": "diff --git a/flink-runtime/src/main/java/org/apache/flink/runtime/io/network/partition/consumer/UnionInputGate.java b/flink-runtime/src/main/java/org/apache/flink/runtime/io/network/partition/consumer/UnionInputGate.java\nindex 115511215a7..343bba71f42 100644\n--- a/flink-runtime/src/main/java/org/apache/flink/runtime/io/network/partition/consumer/UnionInputGate.java\n+++ b/flink-runtime/src/main/java/org/apache/flink/runtime/io/network/partition/consumer/UnionInputGate.java\n@@ -32,7 +32,6 @@ import java.util.Optional;\n import java.util.Set;\n import java.util.concurrent.CompletableFuture;\n import java.util.stream.Collectors;\n-import java.util.stream.IntStream;\n \n import static org.apache.flink.util.Preconditions.checkArgument;\n import static org.apache.flink.util.Preconditions.checkNotNull;\n@@ -79,8 +78,7 @@ public class UnionInputGate extends InputGate {\n \t */\n \tprivate final LinkedHashSet<IndexedInputGate> inputGatesWithData = new LinkedHashSet<>();\n \n-\t/** Input channels across all unioned input gates. */\n-\tprivate final InputChannel[] inputChannels;\n+\tprivate final int[] inputChannelToInputGateIndex;\n \n \t/**\n \t * A mapping from input gate index to (logical) channel index offset. Valid channel indexes go from 0\n@@ -101,14 +99,16 @@ public class UnionInputGate extends InputGate {\n \n \t\tfinal int maxGateIndex = Arrays.stream(inputGates).mapToInt(IndexedInputGate::getGateIndex).max().orElse(0);\n \t\tinputGateChannelIndexOffsets = new int[maxGateIndex + 1];\n+\t\tint totalNumberOfInputChannels = Arrays.stream(inputGates).mapToInt(IndexedInputGate::getNumberOfInputChannels).sum();\n+\t\tinputChannelToInputGateIndex = new int[totalNumberOfInputChannels];\n+\n \t\tint currentNumberOfInputChannels = 0;\n \t\tfor (final IndexedInputGate inputGate : inputGates) {\n \t\t\tinputGateChannelIndexOffsets[inputGate.getGateIndex()] = currentNumberOfInputChannels;\n+\t\t\tint previousNumberOfInputChannels = currentNumberOfInputChannels;\n \t\t\tcurrentNumberOfInputChannels += inputGate.getNumberOfInputChannels();\n+\t\t\tArrays.fill(inputChannelToInputGateIndex, previousNumberOfInputChannels, currentNumberOfInputChannels, inputGate.getGateIndex());\n \t\t}\n-\t\tinputChannels = Arrays.stream(inputGates)\n-\t\t\t.flatMap(gate -> IntStream.range(0, gate.getNumberOfInputChannels()).mapToObj(gate::getChannel))\n-\t\t\t.toArray(InputChannel[]::new);\n \n \t\tsynchronized (inputGatesWithData) {\n \t\t\tfor (IndexedInputGate inputGate : inputGates) {\n@@ -134,12 +134,13 @@ public class UnionInputGate extends InputGate {\n \t */\n \t@Override\n \tpublic int getNumberOfInputChannels() {\n-\t\treturn inputChannels.length;\n+\t\treturn inputChannelToInputGateIndex.length;\n \t}\n \n \t@Override\n \tpublic InputChannel getChannel(int channelIndex) {\n-\t\treturn inputChannels[channelIndex];\n+\t\tint gateIndex = this.inputChannelToInputGateIndex[channelIndex];\n+\t\treturn inputGates[gateIndex].getChannel(channelIndex - inputGateChannelIndexOffsets[gateIndex]);\n \t}\n \n \t@Override\n@@ -260,7 +261,7 @@ public class UnionInputGate extends InputGate {\n \t\t// BEWARE: consumption resumption only happens for streaming jobs in which all\n \t\t// slots are allocated together so there should be no UnknownInputChannel. We\n \t\t// will refactor the code to not rely on this assumption in the future.\n-\t\tinputChannels[channelIndex].resumeConsumption();\n+\t\tgetChannel(channelIndex).resumeConsumption();\n \t}\n \n \t@Override\n",
+  "files": 1,
+  "linesAdd": 10,
+  "linesRem": 9,
+  "failing_tests": [
+    "org.apache.flink.runtime.io.network.partition.consumer.UnionInputGateTest.testUpdateInputChannel"
+  ],
+  "nb_test": 4496,
+  "nb_failure": 1,
+  "nb_error": 0,
+  "nb_skipped": 39
+}

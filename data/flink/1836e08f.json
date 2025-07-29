@@ -1,0 +1,19 @@
+{
+  "project": "flink",
+  "jira_id": "4788",
+  "commit": "1836e08f",
+  "classification": {
+    "singleLine": false
+  },
+  "patch": "diff --git a/flink-streaming-java/src/main/java/org/apache/flink/streaming/runtime/tasks/StreamTask.java b/flink-streaming-java/src/main/java/org/apache/flink/streaming/runtime/tasks/StreamTask.java\nindex 8ada6d3e13e..4893fedd4e0 100644\n--- a/flink-streaming-java/src/main/java/org/apache/flink/streaming/runtime/tasks/StreamTask.java\n+++ b/flink-streaming-java/src/main/java/org/apache/flink/streaming/runtime/tasks/StreamTask.java\n@@ -752,8 +752,7 @@ public abstract class StreamTask<OUT, OP extends StreamOperator<OUT>>\n \t\t\t\tbackendName = \"jobmanager\";\n \t\t\t}\n \n-\t\t\tbackendName = backendName.toLowerCase();\n-\t\t\tswitch (backendName) {\n+\t\t\tswitch (backendName.toLowerCase()) {\n \t\t\t\tcase \"jobmanager\":\n \t\t\t\t\tLOG.info(\"State backend is set to heap memory (checkpoint to jobmanager)\");\n \t\t\t\t\tstateBackend = new MemoryStateBackend();\n",
+  "files": 1,
+  "linesAdd": 1,
+  "linesRem": 2,
+  "failing_tests": [
+    "org.apache.flink.streaming.runtime.tasks.StreamTaskTest.testStateBackendLoading"
+  ],
+  "nb_test": 330,
+  "nb_failure": 1,
+  "nb_error": 0,
+  "nb_skipped": 1
+}

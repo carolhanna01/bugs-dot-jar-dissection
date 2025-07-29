@@ -1,0 +1,17 @@
+{
+  "project": "flink",
+  "jira_id": "19166",
+  "commit": "42d8dde0",
+  "classification": {
+    "singleLine": false
+  },
+  "patch": "diff --git a/flink-table/flink-table-runtime-blink/src/main/java/org/apache/flink/table/filesystem/stream/StreamingFileWriter.java b/flink-table/flink-table-runtime-blink/src/main/java/org/apache/flink/table/filesystem/stream/StreamingFileWriter.java\nindex c2186bff9bc..924ef982103 100644\n--- a/flink-table/flink-table-runtime-blink/src/main/java/org/apache/flink/table/filesystem/stream/StreamingFileWriter.java\n+++ b/flink-table/flink-table-runtime-blink/src/main/java/org/apache/flink/table/filesystem/stream/StreamingFileWriter.java\n@@ -79,17 +79,10 @@ public class StreamingFileWriter extends AbstractStreamOperator<CommitMessage>\n \tpublic void initializeState(StateInitializationContext context) throws Exception {\n \t\tsuper.initializeState(context);\n \t\tbuckets = bucketsBuilder.createBuckets(getRuntimeContext().getIndexOfThisSubtask());\n-\t\thelper = new StreamingFileSinkHelper<>(\n-\t\t\t\tbuckets,\n-\t\t\t\tcontext.isRestored(),\n-\t\t\t\tcontext.getOperatorStateStore(),\n-\t\t\t\tgetRuntimeContext().getProcessingTimeService(),\n-\t\t\t\tbucketCheckInterval);\n \n+\t\t// Set listener before the initialization of Buckets.\n \t\tinactivePartitions = new HashSet<>();\n-\t\tcurrentWatermark = Long.MIN_VALUE;\n \t\tbuckets.setBucketLifeCycleListener(new BucketLifeCycleListener<RowData, String>() {\n-\n \t\t\t@Override\n \t\t\tpublic void bucketCreated(Bucket<RowData, String> bucket) {\n \t\t\t}\n@@ -99,6 +92,14 @@ public class StreamingFileWriter extends AbstractStreamOperator<CommitMessage>\n \t\t\t\tinactivePartitions.add(bucket.getBucketId());\n \t\t\t}\n \t\t});\n+\n+\t\thelper = new StreamingFileSinkHelper<>(\n+\t\t\t\tbuckets,\n+\t\t\t\tcontext.isRestored(),\n+\t\t\t\tcontext.getOperatorStateStore(),\n+\t\t\t\tgetRuntimeContext().getProcessingTimeService(),\n+\t\t\t\tbucketCheckInterval);\n+\t\tcurrentWatermark = Long.MIN_VALUE;\n \t}\n \n \t@Override\n",
+  "files": 1,
+  "linesAdd": 9,
+  "linesRem": 8,
+  "failing_tests": ["org.apache.flink.table.filesystem.stream.StreamingFileWriterTest.testFailover"],
+  "nb_test": 923,
+  "nb_failure": 1,
+  "nb_error": 0,
+  "nb_skipped": 0
+}
