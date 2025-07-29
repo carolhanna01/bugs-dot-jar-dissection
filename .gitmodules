@@ -22,3 +22,27 @@
 [submodule "repositories/logging-log4j2"]
 	path = repositories/logging-log4j2
 	url = https://github.com/bugs-dot-jar/logging-log4j2
+[submodule "repositories/jackrabbit"]
+	path = repositories/jackrabbit
+	url = https://github.com/carolhanna01/jackrabbit.git
+[submodule "repositories/hbase"]
+	path = repositories/hbase
+	url = https://github.com/carolhanna01/hbase.git
+[submodule "repositories/karaf"]
+	path = repositories/karaf
+	url = https://github.com/carolhanna01/karaf.git
+[submodule "repositories/nifi"]
+	path = repositories/nifi
+	url = https://github.com/carolhanna01/nifi.git
+[submodule "repositories/ambari"]
+	path = repositories/ambari
+	url = https://github.com/carolhanna01/ambari.git
+[submodule "repositories/kafka"]
+	path = repositories/kafka
+	url = https://github.com/carolhanna01/kafka.git
+[submodule "repositories/solr"]
+	path = repositories/solr
+	url = https://github.com/carolhanna01/solr.git
+[submodule "repositories/calcite"]
+	path = repositories/calcite
+	url = https://github.com/carolhanna01/calcite.git
