@@ -42,7 +42,8 @@ def create_bug(project_path, branch_name, destination):
     subprocess.check_call(cmd, shell=True, stdout=FNULL, stderr=FNULL)
 
     # Filter out test files from the patch
-    cmd = "cd %s; filterdiff --exclude='*test*' --exclude='*Test*' .bugs-dot-jar/developer-patch.diff | git apply --reject --whitespace=nowarn; git diff --ignore-all-space --minimal --ignore-blank-lines;" % destination
+    cmd = "cd %s;  git apply .bugs-dot-jar/developer-patch.diff; git diff --ignore-all-space --minimal --ignore-blank-lines;" % destination
+
     print(cmd)
     human_patch = subprocess.check_output(cmd, shell=True)
     cmd = "cd %s;  git checkout -- .;" % destination
