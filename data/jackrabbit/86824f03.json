@@ -1,0 +1,18 @@
+{
+  "project": "jackrabbit",
+  "jira_id": "2081",
+  "commit": "86824f03",
+  "classification": {
+    "singleLine": false
+  },
+  "patch": "diff --git a/jackrabbit-core/src/main/java/org/apache/jackrabbit/core/state/NameSet.java b/jackrabbit-core/src/main/java/org/apache/jackrabbit/core/state/NameSet.java\nindex cc1ffaa78..1e628563b 100644\n--- a/jackrabbit-core/src/main/java/org/apache/jackrabbit/core/state/NameSet.java\n+++ b/jackrabbit-core/src/main/java/org/apache/jackrabbit/core/state/NameSet.java\n@@ -226,6 +226,26 @@ final class NameSet implements Set, Cloneable {\n         throw new UnsupportedOperationException();\n     }\n \n+    //--------------------------------------------------< equals and hashCode >\n+\n+    /**\n+     * {@inheritDoc}\n+     */\n+    public int hashCode() {\n+        return names.hashCode();\n+    }\n+\n+    /**\n+     * {@inheritDoc}\n+     */\n+    public boolean equals(Object obj) {\n+        if (obj instanceof NameSet) {\n+            NameSet other = (NameSet) obj;\n+            return this.names.equals(other.names);\n+        }\n+        return false;\n+    }\n+\n     //----------------------------------------------------< Cloneable support >\n \n     /**\n",
+  "files": 1,
+  "linesAdd": 20,
+  "linesRem": 0,
+  "failing_tests": ["org.apache.jackrabbit.core.state.NameSetTest.testEquals",
+    "org.apache.jackrabbit.core.state.NameSetTest.testHashCode"],
+  "nb_test": 1205,
+  "nb_failure": 2,
+  "nb_error": 0,
+  "nb_skipped": 0
+}

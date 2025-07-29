@@ -1,0 +1,17 @@
+{
+  "project": "jackrabbit",
+  "jira_id": "3883",
+  "commit": "57c16ec4",
+  "classification": {
+    "singleLine": false
+  },
+  "patch": "diff --git a/jackrabbit-webdav/src/main/java/org/apache/jackrabbit/webdav/xml/DomUtil.java b/jackrabbit-webdav/src/main/java/org/apache/jackrabbit/webdav/xml/DomUtil.java\nindex 34f4b1610..bd6bc60c9 100644\n--- a/jackrabbit-webdav/src/main/java/org/apache/jackrabbit/webdav/xml/DomUtil.java\n+++ b/jackrabbit-webdav/src/main/java/org/apache/jackrabbit/webdav/xml/DomUtil.java\n@@ -28,9 +28,7 @@ import org.w3c.dom.NodeList;\n import org.w3c.dom.Text;\n import org.w3c.dom.NamedNodeMap;\n import org.xml.sax.SAXException;\n-import org.xml.sax.helpers.DefaultHandler;\n \n-import javax.xml.XMLConstants;\n import javax.xml.namespace.QName;\n import javax.xml.parsers.DocumentBuilder;\n import javax.xml.parsers.DocumentBuilderFactory;\n@@ -56,26 +54,10 @@ public class DomUtil {\n     private static Logger log = LoggerFactory.getLogger(DomUtil.class);\n \n     /**\n-     * Constant for <code>DocumentBuilderFactory</code> which is used\n+     * Constant for <code>DavDocumentBuilderFactory</code> which is used\n      * to create and parse DOM documents.\n      */\n-    private static DocumentBuilderFactory BUILDER_FACTORY = createFactory();\n-\n-    private static DocumentBuilderFactory createFactory() {\n-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();\n-        factory.setNamespaceAware(true);\n-        factory.setIgnoringComments(true);\n-        factory.setIgnoringElementContentWhitespace(true);\n-        factory.setCoalescing(true);\n-        try {\n-            factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);\n-        } catch (ParserConfigurationException e) {\n-            log.warn(\"Secure XML processing is not supported\", e);\n-        } catch (AbstractMethodError e) {\n-            log.warn(\"Secure XML processing is not supported\", e);\n-        }\n-        return factory;\n-    }\n+    private static final DavDocumentBuilderFactory BUILDER_FACTORY = new DavDocumentBuilderFactory();\n \n     /**\n      * Support the replacement of {@link #BUILDER_FACTORY}. This is useful\n@@ -88,7 +70,7 @@ public class DomUtil {\n      */\n     public static void setBuilderFactory(\n             DocumentBuilderFactory documentBuilderFactory) {\n-        BUILDER_FACTORY = documentBuilderFactory;\n+        BUILDER_FACTORY.setFactory(documentBuilderFactory);\n     }\n \n     /**\n@@ -119,11 +101,6 @@ public class DomUtil {\n     public static Document parseDocument(InputStream stream)\n             throws ParserConfigurationException, SAXException, IOException {\n         DocumentBuilder docBuilder = BUILDER_FACTORY.newDocumentBuilder();\n-\n-        // Set an error handler to prevent parsers from printing error messages\n-        // to standard output!\n-        docBuilder.setErrorHandler(new DefaultHandler());\n-\n         return docBuilder.parse(stream);\n     }\n \n",
+  "files": 1,
+  "linesAdd": 3,
+  "linesRem": 26,
+  "failing_tests": ["org.apache.jackrabbit.webdav.lock.ActiveLockTest.testParsing"],
+  "nb_test": 21,
+  "nb_failure": 0,
+  "nb_error": 1,
+  "nb_skipped": 0
+}
