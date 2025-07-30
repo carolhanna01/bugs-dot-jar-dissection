@@ -1,0 +1,17 @@
+{
+  "project": "ambari",
+  "jira_id": "16128",
+  "commit": "6a906e63",
+  "classification": {
+    "singleLine": false
+  },
+  "patch": "diff --git a/ambari-server/src/main/java/org/apache/ambari/server/upgrade/UpgradeCatalog240.java b/ambari-server/src/main/java/org/apache/ambari/server/upgrade/UpgradeCatalog240.java\nindex 14cb42c6db..eb8700e6b2 100644\n--- a/ambari-server/src/main/java/org/apache/ambari/server/upgrade/UpgradeCatalog240.java\n+++ b/ambari-server/src/main/java/org/apache/ambari/server/upgrade/UpgradeCatalog240.java\n@@ -219,6 +219,7 @@ public class UpgradeCatalog240 extends AbstractUpgradeCatalog {\n     addSettingPermission();\n     addManageUserPersistedDataPermission();\n     updateHDFSConfigs();\n+    updateHIVEConfigs();\n     updateAMSConfigs();\n     updateClusterEnv();\n     updateHostRoleCommandTableDML();\n@@ -1321,6 +1322,44 @@ public class UpgradeCatalog240 extends AbstractUpgradeCatalog {\n     }\n   }\n \n+\n+  protected void updateHIVEConfigs() throws AmbariException {\n+    AmbariManagementController ambariManagementController = injector.getInstance(AmbariManagementController.class);\n+    Clusters clusters = ambariManagementController.getClusters();\n+\n+    if (clusters != null) {\n+      Map<String, Cluster> clusterMap = clusters.getClusters();\n+\n+      if (clusterMap != null && !clusterMap.isEmpty()) {\n+        for (final Cluster cluster : clusterMap.values()) {\n+          Set<String> installedServices = cluster.getServices().keySet();\n+\n+          if (installedServices.contains(\"HIVE\")) {\n+            Config hiveSite = cluster.getDesiredConfigByType(\"hive-site\");\n+            if (hiveSite != null) {\n+              Map<String, String> hiveSiteProperties = hiveSite.getProperties();\n+              String txn_manager = hiveSiteProperties.get(\"hive.txn.manager\");\n+              String concurrency = hiveSiteProperties.get(\"hive.support.concurrency\");\n+              String initiator_on = hiveSiteProperties.get(\"hive.compactor.initiator.on\");\n+              String partition_mode = hiveSiteProperties.get(\"hive.exec.dynamic.partition.mode\");\n+              boolean acid_enabled =\n+                  txn_manager != null && txn_manager.equals(\"org.apache.hadoop.hive.ql.lockmgr.DbTxnManager\") &&\n+                  concurrency != null && concurrency.toLowerCase().equals(\"true\") &&\n+                  initiator_on != null && initiator_on.toLowerCase().equals(\"true\") &&\n+                  partition_mode != null && partition_mode.equals(\"nonstrict\");\n+\n+              Config hiveEnv = cluster.getDesiredConfigByType(\"hive-env\");\n+              if(hiveEnv != null){\n+                if(acid_enabled)\n+                  updateConfigurationProperties(\"hive-env\", Collections.singletonMap(\"hive_txn_acid\", \"on\"), true, false);\n+              }\n+            }\n+          }\n+        }\n+      }\n+    }\n+  }\n+\n   protected void updateAMSConfigs() throws AmbariException {\n     AmbariManagementController ambariManagementController = injector.getInstance(AmbariManagementController.class);\n     Clusters clusters = ambariManagementController.getClusters();\n",
+  "files": 1,
+  "linesAdd": 39,
+  "linesRem": 0,
+  "failing_tests": [],
+  "nb_test": 0,
+  "nb_failure": 0,
+  "nb_error": 0,
+  "nb_skipped": 0
+}

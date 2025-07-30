@@ -1,0 +1,17 @@
+{
+  "project": "ambari",
+  "jira_id": "24507",
+  "commit": "9491f1fd",
+  "classification": {
+    "singleLine": false
+  },
+  "patch": "diff --git a/ambari-server/src/main/java/org/apache/ambari/server/ldap/service/ads/DefaultLdapConfigurationService.java b/ambari-server/src/main/java/org/apache/ambari/server/ldap/service/ads/DefaultLdapConfigurationService.java\nindex cffb19027e..47e758cb22 100644\n--- a/ambari-server/src/main/java/org/apache/ambari/server/ldap/service/ads/DefaultLdapConfigurationService.java\n+++ b/ambari-server/src/main/java/org/apache/ambari/server/ldap/service/ads/DefaultLdapConfigurationService.java\n@@ -181,7 +181,7 @@ public class DefaultLdapConfigurationService implements LdapConfigurationService\n     EntryMapper<String> entryMapper = new EntryMapper<String>() {\n       @Override\n       public String map(Entry entry) throws LdapException {\n-        return entry.get(ambariLdapConfiguration.groupNameAttribute()).get().getString();\n+        return entry.get(ambariLdapConfiguration.groupNameAttribute()).get().getValue();\n       }\n     };\n \n",
+  "files": 1,
+  "linesAdd": 1,
+  "linesRem": 1,
+  "failing_tests": [],
+  "nb_test": 0,
+  "nb_failure": 0,
+  "nb_error": 0,
+  "nb_skipped": 0
+}

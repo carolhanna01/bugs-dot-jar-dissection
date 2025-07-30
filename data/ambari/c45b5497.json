@@ -1,0 +1,17 @@
+{
+  "project": "ambari",
+  "jira_id": "18341",
+  "commit": "c45b5497",
+  "classification": {
+    "singleLine": true
+  },
+  "patch": "diff --git a/ambari-server/src/main/java/org/apache/ambari/server/upgrade/SchemaUpgradeHelper.java b/ambari-server/src/main/java/org/apache/ambari/server/upgrade/SchemaUpgradeHelper.java\nindex 2256acf429..54ffec5aa4 100644\n--- a/ambari-server/src/main/java/org/apache/ambari/server/upgrade/SchemaUpgradeHelper.java\n+++ b/ambari-server/src/main/java/org/apache/ambari/server/upgrade/SchemaUpgradeHelper.java\n@@ -193,6 +193,7 @@ public class SchemaUpgradeHelper {\n       catalogBinder.addBinding().to(UpgradeCatalog230.class);\n       catalogBinder.addBinding().to(UpgradeCatalog240.class);\n       catalogBinder.addBinding().to(UpgradeCatalog250.class);\n+      catalogBinder.addBinding().to(UpgradeCatalog300.class);\n       catalogBinder.addBinding().to(FinalUpgradeCatalog.class);\n \n       EventBusSynchronizer.synchronizeAmbariEventPublisher(binder());\n",
+  "files": 1,
+  "linesAdd": 1,
+  "linesRem": 0,
+  "failing_tests": [],
+  "nb_test": 0,
+  "nb_failure": 0,
+  "nb_error": 0,
+  "nb_skipped": 0
+}
