@@ -1,0 +1,19 @@
+{
+  "project": "nifi",
+  "jira_id": "7017",
+  "commit": "10332535",
+  "classification": {
+    "singleLine": false
+  },
+  "patch": "diff --git a/nifi-nar-bundles/nifi-prometheus-bundle/nifi-prometheus-reporting-task/src/main/java/org/apache/nifi/reporting/prometheus/api/PrometheusMetricsUtil.java b/nifi-nar-bundles/nifi-prometheus-bundle/nifi-prometheus-reporting-task/src/main/java/org/apache/nifi/reporting/prometheus/api/PrometheusMetricsUtil.java\nindex 91a54a0721..33222c77d4 100644\n--- a/nifi-nar-bundles/nifi-prometheus-bundle/nifi-prometheus-reporting-task/src/main/java/org/apache/nifi/reporting/prometheus/api/PrometheusMetricsUtil.java\n+++ b/nifi-nar-bundles/nifi-prometheus-bundle/nifi-prometheus-reporting-task/src/main/java/org/apache/nifi/reporting/prometheus/api/PrometheusMetricsUtil.java\n@@ -329,17 +329,19 @@ public class PrometheusMetricsUtil {\n         final String componentId = status.getId();\n         final String componentName = status.getName();\n \n-        // Clear all collectors to deal with removed/renamed components\n+        // Clear all collectors to deal with removed/renamed components -- for root PG only\n+        if(\"RootProcessGroup\".equals(componentType)) {\n             try {\n                 for (final Field field : PrometheusMetricsUtil.class.getDeclaredFields()) {\n                     if (Modifier.isStatic(field.getModifiers()) && (field.get(null) instanceof SimpleCollector)) {\n-                    SimpleCollector sc = (SimpleCollector)(field.get(null));\n+                        SimpleCollector<?> sc = (SimpleCollector<?>) (field.get(null));\n                         sc.clear();\n                     }\n                 }\n             } catch (IllegalAccessException e) {\n                 // ignore\n             }\n+        }\n \n         AMOUNT_FLOWFILES_SENT.labels(instanceId, componentType, componentName, componentId, parentPGId).set(status.getFlowFilesSent());\n         AMOUNT_FLOWFILES_TRANSFERRED.labels(instanceId, componentType, componentName, componentId, parentPGId).set(status.getFlowFilesTransferred());\n@@ -372,7 +374,7 @@ public class PrometheusMetricsUtil {\n \n         // Report metrics for child process groups if specified\n         if (METRICS_STRATEGY_PG.getValue().equals(metricsStrategy) || METRICS_STRATEGY_COMPONENTS.getValue().equals(metricsStrategy)) {\n-            status.getProcessGroupStatus().forEach((childGroupStatus) -> createNifiMetrics(childGroupStatus, instanceId, parentPGId, \"ProcessGroup\", metricsStrategy));\n+            status.getProcessGroupStatus().forEach((childGroupStatus) -> createNifiMetrics(childGroupStatus, instanceId, componentId, \"ProcessGroup\", metricsStrategy));\n         }\n \n         if (METRICS_STRATEGY_COMPONENTS.getValue().equals(metricsStrategy)) {\n",
+  "files": 1,
+  "linesAdd": 5,
+  "linesRem": 3,
+  "failing_tests": [
+    "org.apache.nifi.reporting.prometheus.TestPrometheusReportingTask.testOnTrigger"
+  ],
+  "nb_test": 2,
+  "nb_failure": 1,
+  "nb_error": 0,
+  "nb_skipped": 0
+}

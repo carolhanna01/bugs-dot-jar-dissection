@@ -1,0 +1,19 @@
+{
+  "project": "nifi",
+  "jira_id": "12676",
+  "commit": "ecb87149",
+  "classification": {
+    "singleLine": false
+  },
+  "patch": "diff --git a/nifi-nar-bundles/nifi-standard-bundle/nifi-standard-processors/src/main/java/org/apache/nifi/processors/standard/HandleHttpRequest.java b/nifi-nar-bundles/nifi-standard-bundle/nifi-standard-processors/src/main/java/org/apache/nifi/processors/standard/HandleHttpRequest.java\nindex de7ff1ad7a..6cc07da11a 100644\n--- a/nifi-nar-bundles/nifi-standard-bundle/nifi-standard-processors/src/main/java/org/apache/nifi/processors/standard/HandleHttpRequest.java\n+++ b/nifi-nar-bundles/nifi-standard-bundle/nifi-standard-processors/src/main/java/org/apache/nifi/processors/standard/HandleHttpRequest.java\n@@ -51,9 +51,8 @@ import org.apache.nifi.scheduling.ExecutionNode;\n import org.apache.nifi.ssl.RestrictedSSLContextService;\n import org.apache.nifi.ssl.SSLContextService;\n import org.apache.nifi.stream.io.StreamUtils;\n+import org.eclipse.jetty.ee10.servlet.ServletContextHandler;\n import org.eclipse.jetty.ee10.servlet.ServletContextRequest;\n-import org.eclipse.jetty.ee10.servlet.ServletHandler;\n-import org.eclipse.jetty.ee10.servlet.ServletHolder;\n import org.eclipse.jetty.server.Connector;\n import org.eclipse.jetty.server.Server;\n import org.eclipse.jetty.server.ServerConnector;\n@@ -485,8 +484,9 @@ public class HandleHttpRequest extends AbstractProcessor {\n                 }\n             }\n         };\n-        final ServletHandler servletHandler = new ServletHandler();\n-        servletHandler.addServlet(new ServletHolder(standardServlet));\n+        final ServletContextHandler handler = new ServletContextHandler();\n+        handler.addServlet(standardServlet, \"/\");\n+        server.setHandler(handler);\n \n         this.server = server;\n         server.start();\n",
+  "files": 1,
+  "linesAdd": 4,
+  "linesRem": 4,
+  "failing_tests": [
+    "org.apache.nifi.processors.standard.HandleHttpRequestTest.testRunMethodNotAllowed"
+  ],
+  "nb_test": 1756,
+  "nb_failure": 1,
+  "nb_error": 0,
+  "nb_skipped": 3
+}

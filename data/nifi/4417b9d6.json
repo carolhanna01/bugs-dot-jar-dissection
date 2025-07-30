@@ -1,0 +1,17 @@
+{
+  "project": "nifi",
+  "jira_id": "7734",
+  "commit": "4417b9d6",
+  "classification": {
+    "singleLine": false
+  },
+  "patch": "diff --git a/nifi-nar-bundles/nifi-standard-services/nifi-record-serialization-services-bundle/nifi-record-serialization-services/src/main/java/org/apache/nifi/csv/CSVReader.java b/nifi-nar-bundles/nifi-standard-services/nifi-record-serialization-services-bundle/nifi-record-serialization-services/src/main/java/org/apache/nifi/csv/CSVReader.java\nindex b71971165d..8eeb422ffc 100644\n--- a/nifi-nar-bundles/nifi-standard-services/nifi-record-serialization-services-bundle/nifi-record-serialization-services/src/main/java/org/apache/nifi/csv/CSVReader.java\n+++ b/nifi-nar-bundles/nifi-standard-services/nifi-record-serialization-services-bundle/nifi-record-serialization-services/src/main/java/org/apache/nifi/csv/CSVReader.java\n@@ -101,6 +101,7 @@ public class CSVReader extends SchemaRegistryService implements RecordReaderFact\n         properties.add(DateTimeUtils.TIMESTAMP_FORMAT);\n         properties.add(CSVUtils.CSV_FORMAT);\n         properties.add(CSVUtils.VALUE_SEPARATOR);\n+        properties.add(CSVUtils.RECORD_SEPARATOR);\n         properties.add(CSVUtils.FIRST_LINE_IS_HEADER);\n         properties.add(CSVUtils.IGNORE_CSV_HEADER);\n         properties.add(CSVUtils.QUOTE_CHAR);\ndiff --git a/nifi-nar-bundles/nifi-standard-services/nifi-record-serialization-services-bundle/nifi-record-serialization-services/src/main/java/org/apache/nifi/csv/JacksonCSVRecordReader.java b/nifi-nar-bundles/nifi-standard-services/nifi-record-serialization-services-bundle/nifi-record-serialization-services/src/main/java/org/apache/nifi/csv/JacksonCSVRecordReader.java\nindex 1af94b89f1..975a9b1437 100644\n--- a/nifi-nar-bundles/nifi-standard-services/nifi-record-serialization-services-bundle/nifi-record-serialization-services/src/main/java/org/apache/nifi/csv/JacksonCSVRecordReader.java\n+++ b/nifi-nar-bundles/nifi-standard-services/nifi-record-serialization-services-bundle/nifi-record-serialization-services/src/main/java/org/apache/nifi/csv/JacksonCSVRecordReader.java\n@@ -60,7 +60,7 @@ public class JacksonCSVRecordReader extends AbstractCSVRecordReader {\n \n         CsvSchema.Builder csvSchemaBuilder = CsvSchema.builder()\n                 .setColumnSeparator(csvFormat.getDelimiter())\n-                .setLineSeparator(csvFormat.getRecordSeparator())\n+                .setLineSeparator((csvFormat.getRecordSeparator() == null) ? \"\\n\" : csvFormat.getRecordSeparator())\n                 // Can only use comments in Jackson CSV if the correct marker is set\n                 .setAllowComments(\"#\" .equals(CharUtils.toString(csvFormat.getCommentMarker())))\n                 // The call to setUseHeader(false) in all code paths is due to the way Jackson does data binding/mapping. Missing or extra columns may not\n",
+  "files": 2,
+  "linesAdd": 2,
+  "linesRem": 1,
+  "failing_tests": [],
+  "nb_test": 275,
+  "nb_failure": 0,
+  "nb_error": 1,
+  "nb_skipped": 5
+}
