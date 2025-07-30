@@ -34,9 +34,6 @@
 [submodule "repositories/nifi"]
 	path = repositories/nifi
 	url = https://github.com/carolhanna01/nifi.git
-[submodule "repositories/ambari"]
-	path = repositories/ambari
-	url = https://github.com/carolhanna01/ambari.git
 [submodule "repositories/kafka"]
 	path = repositories/kafka
 	url = https://github.com/carolhanna01/kafka.git
@@ -49,3 +46,6 @@
 [submodule "repositories/hadoop"]
 	path = repositories/hadoop
 	url = https://github.com/carolhanna01/hadoop.git
+[submodule "repositories/ambari"]
+	path = repositories/ambari
+	url = https://github.com/carolhanna01/ambari.git
