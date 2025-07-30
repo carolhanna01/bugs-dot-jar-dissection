@@ -1,0 +1,19 @@
+{
+  "project": "hadoop",
+  "jira_id": "7341",
+  "commit": "31ebccc9",
+  "classification": {
+    "singleLine": false
+  },
+  "patch": "diff --git a/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-server/hadoop-yarn-server-router/src/main/java/org/apache/hadoop/yarn/server/router/webapp/RouterWebServiceUtil.java b/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-server/hadoop-yarn-server-router/src/main/java/org/apache/hadoop/yarn/server/router/webapp/RouterWebServiceUtil.java\nindex 5528e784a0..76435f0551 100644\n--- a/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-server/hadoop-yarn-server-router/src/main/java/org/apache/hadoop/yarn/server/router/webapp/RouterWebServiceUtil.java\n+++ b/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-server/hadoop-yarn-server-router/src/main/java/org/apache/hadoop/yarn/server/router/webapp/RouterWebServiceUtil.java\n@@ -406,22 +406,26 @@ public static void mergeMetrics(ClusterMetricsInfo metrics,\n     metrics.setContainersPending(metrics.getPendingContainers()\n         + metricsResponse.getPendingContainers());\n \n-    metrics.setTotalMB(metrics.getTotalMB() + metricsResponse.getTotalMB());\n-    metrics.setTotalVirtualCores(\n-        metrics.getTotalVirtualCores() + metrics.getTotalVirtualCores());\n-    metrics.setTotalNodes(metrics.getTotalNodes() + metrics.getTotalNodes());\n-    metrics.setLostNodes(metrics.getLostNodes() + metrics.getLostNodes());\n-    metrics.setUnhealthyNodes(\n-        metrics.getUnhealthyNodes() + metrics.getUnhealthyNodes());\n-    metrics.setDecommissioningNodes(\n-        metrics.getDecommissioningNodes() + metrics.getDecommissioningNodes());\n-    metrics.setDecommissionedNodes(\n-        metrics.getDecommissionedNodes() + metrics.getDecommissionedNodes());\n-    metrics.setRebootedNodes(\n-        metrics.getRebootedNodes() + metrics.getRebootedNodes());\n-    metrics.setActiveNodes(metrics.getActiveNodes() + metrics.getActiveNodes());\n-    metrics.setShutdownNodes(\n-        metrics.getShutdownNodes() + metrics.getShutdownNodes());\n+    metrics.setTotalMB(metrics.getTotalMB()\n+        + metricsResponse.getTotalMB());\n+    metrics.setTotalVirtualCores(metrics.getTotalVirtualCores()\n+        + metricsResponse.getTotalVirtualCores());\n+    metrics.setTotalNodes(metrics.getTotalNodes()\n+        + metricsResponse.getTotalNodes());\n+    metrics.setLostNodes(metrics.getLostNodes()\n+        + metricsResponse.getLostNodes());\n+    metrics.setUnhealthyNodes(metrics.getUnhealthyNodes()\n+        + metricsResponse.getUnhealthyNodes());\n+    metrics.setDecommissioningNodes(metrics.getDecommissioningNodes()\n+        + metricsResponse.getDecommissioningNodes());\n+    metrics.setDecommissionedNodes(metrics.getDecommissionedNodes()\n+        + metricsResponse.getDecommissionedNodes());\n+    metrics.setRebootedNodes(metrics.getRebootedNodes()\n+        + metricsResponse.getRebootedNodes());\n+    metrics.setActiveNodes(metrics.getActiveNodes()\n+        + metricsResponse.getActiveNodes());\n+    metrics.setShutdownNodes(metrics.getShutdownNodes()\n+        + metricsResponse.getShutdownNodes());\n   }\n \n }\n",
+  "files": 1,
+  "linesAdd": 20,
+  "linesRem": 16,
+  "failing_tests": [
+    "org.apache.hadoop.yarn.server.router.webapp.TestRouterWebServiceUtil.testMergeMetrics"
+  ],
+  "nb_test": 115,
+  "nb_failure": 1,
+  "nb_error": 0,
+  "nb_skipped": 0
+}

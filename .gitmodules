@@ -46,3 +46,6 @@
 [submodule "repositories/calcite"]
 	path = repositories/calcite
 	url = https://github.com/carolhanna01/calcite.git
+[submodule "repositories/hadoop"]
+	path = repositories/hadoop
+	url = https://github.com/carolhanna01/hadoop.git

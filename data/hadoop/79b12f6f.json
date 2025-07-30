@@ -1,0 +1,20 @@
+{
+  "project": "hadoop",
+  "jira_id": "9289",
+  "commit": "79b12f6f",
+  "classification": {
+    "singleLine": false
+  },
+  "patch": "diff --git a/hadoop-common-project/hadoop-common/src/main/java/org/apache/hadoop/fs/shell/Delete.java b/hadoop-common-project/hadoop-common/src/main/java/org/apache/hadoop/fs/shell/Delete.java\nindex 4dc550501c..ed190d3746 100644\n--- a/hadoop-common-project/hadoop-common/src/main/java/org/apache/hadoop/fs/shell/Delete.java\n+++ b/hadoop-common-project/hadoop-common/src/main/java/org/apache/hadoop/fs/shell/Delete.java\n@@ -21,6 +21,7 @@\n import java.io.FileNotFoundException;\n import java.io.IOException;\n import java.util.LinkedList;\n+import java.util.List;\n \n import org.apache.hadoop.classification.InterfaceAudience;\n import org.apache.hadoop.classification.InterfaceStability;\n@@ -28,6 +29,7 @@\n import org.apache.hadoop.fs.PathIsDirectoryException;\n import org.apache.hadoop.fs.PathIsNotDirectoryException;\n import org.apache.hadoop.fs.PathIsNotEmptyDirectoryException;\n+import org.apache.hadoop.fs.PathNotFoundException;\n import org.apache.hadoop.fs.Trash;\n \n /**\n@@ -71,6 +73,19 @@ protected void processOptions(LinkedList<String> args) throws IOException {\n       skipTrash = cf.getOpt(\"skipTrash\");\n     }\n \n+    @Override\n+    protected List<PathData> expandArgument(String arg) throws IOException {\n+      try {\n+        return super.expandArgument(arg);\n+      } catch (PathNotFoundException e) {\n+        if (!ignoreFNF) {\n+          throw e;\n+        }\n+        // prevent -f on a non-existent glob from failing\n+        return new LinkedList<PathData>();\n+      }\n+    }\n+\n     @Override\n     protected void processNonexistentPath(PathData item) throws IOException {\n       if (!ignoreFNF) super.processNonexistentPath(item);\n",
+  "files": 1,
+  "linesAdd": 15,
+  "linesRem": 0,
+  "failing_tests": [
+    "org.apache.hadoop.security.TestDoAsEffectiveUser.testRealUserIPNotSpecified",
+    "org.apache.hadoop.fs.TestFsShellReturnCode.testRmForceWithNonexistentGlob"
+  ],
+  "nb_test": 1835,
+  "nb_failure": 2,
+  "nb_error": 0,
+  "nb_skipped": 21
+}

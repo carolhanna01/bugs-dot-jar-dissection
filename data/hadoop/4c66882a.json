@@ -1,0 +1,17 @@
+{
+  "project": "hadoop",
+  "jira_id": "6227",
+  "commit": "4c66882a",
+  "classification": {
+    "singleLine": false
+  },
+  "patch": "diff --git a/src/java/org/apache/hadoop/conf/Configuration.java b/src/java/org/apache/hadoop/conf/Configuration.java\nindex c53d33a299..edf0f15afe 100644\n--- a/src/java/org/apache/hadoop/conf/Configuration.java\n+++ b/src/java/org/apache/hadoop/conf/Configuration.java\n@@ -1286,19 +1286,22 @@ public class Configuration implements Iterable<Map.Entry<String,String>>,\n         }\n         \n         // Ignore this parameter if it has already been marked as 'final'\n-        if (attr != null && value != null) {\n+        if (attr != null) {\n+          if (value != null) {\n             if (!finalParameters.contains(attr)) {\n               properties.setProperty(attr, value);\n               if (storeResource) {\n                 updatingResource.put(attr, name.toString());\n               }\n-            if (finalParameter)\n-              finalParameters.add(attr);\n             } else {\n               LOG.warn(name+\":a attempt to override final parameter: \"+attr\n                      +\";  Ignoring.\");\n             }\n           }\n+          if (finalParameter) {\n+            finalParameters.add(attr);\n+          }\n+        }\n       }\n         \n     } catch (IOException e) {\n",
+  "files": 1,
+  "linesAdd": 6,
+  "linesRem": 3,
+  "failing_tests": ["org.apache.hadoop.conf.TestConfiguration"],
+  "nb_test": 505,
+  "nb_failure": 1,
+  "nb_error": 0,
+  "nb_skipped": 0
+}

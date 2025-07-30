@@ -1,0 +1,17 @@
+{
+  "project": "hadoop",
+  "jira_id": "8096",
+  "commit": "b1e05908",
+  "classification": {
+    "singleLine": false
+  },
+  "patch": "diff --git a/hadoop-hdfs-project/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/server/datanode/BPOfferService.java b/hadoop-hdfs-project/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/server/datanode/BPOfferService.java\nindex da9642adfa..1b42b19af8 100644\n--- a/hadoop-hdfs-project/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/server/datanode/BPOfferService.java\n+++ b/hadoop-hdfs-project/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/server/datanode/BPOfferService.java\n@@ -656,7 +656,6 @@ private boolean processCommandFromActive(DatanodeCommand cmd,\n       // Send a copy of a block to another datanode\n       dn.transferBlocks(bcmd.getBlockPoolId(), bcmd.getBlocks(),\n           bcmd.getTargets(), bcmd.getTargetStorageTypes());\n-      dn.metrics.incrBlocksReplicated(bcmd.getBlocks().length);\n       break;\n     case DatanodeProtocol.DNA_INVALIDATE:\n       //\ndiff --git a/hadoop-hdfs-project/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/server/datanode/DataNode.java b/hadoop-hdfs-project/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/server/datanode/DataNode.java\nindex 50dccb825d..8c08871b25 100644\n--- a/hadoop-hdfs-project/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/server/datanode/DataNode.java\n+++ b/hadoop-hdfs-project/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/server/datanode/DataNode.java\n@@ -2174,6 +2174,8 @@ public void run() {\n                   + Arrays.asList(targets));\n             }\n           }\n+        } else {\n+          metrics.incrBlocksReplicated();\n         }\n       } catch (IOException ie) {\n         LOG.warn(bpReg + \":Failed to transfer \" + b + \" to \" +\ndiff --git a/hadoop-hdfs-project/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/server/datanode/metrics/DataNodeMetrics.java b/hadoop-hdfs-project/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/server/datanode/metrics/DataNodeMetrics.java\nindex 2e8eb222f7..2e62b3cca5 100644\n--- a/hadoop-hdfs-project/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/server/datanode/metrics/DataNodeMetrics.java\n+++ b/hadoop-hdfs-project/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/server/datanode/metrics/DataNodeMetrics.java\n@@ -210,8 +210,8 @@ public void addCacheReport(long latency) {\n     cacheReports.add(latency);\n   }\n \n-  public void incrBlocksReplicated(int delta) {\n-    blocksReplicated.incr(delta);\n+  public void incrBlocksReplicated() {\n+    blocksReplicated.incr();\n   }\n \n   public void incrBlocksWritten() {\n",
+  "files": 3,
+  "linesAdd": 4,
+  "linesRem": 3,
+  "failing_tests": [],
+  "nb_test": 3328,
+  "nb_failure": 0,
+  "nb_error": 3,
+  "nb_skipped": 117
+}

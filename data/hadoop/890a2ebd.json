@@ -1,0 +1,19 @@
+{
+  "project": "hadoop",
+  "jira_id": "4611",
+  "commit": "890a2ebd",
+  "classification": {
+    "singleLine": false
+  },
+  "patch": "diff --git a/hadoop-tools/hadoop-sls/src/main/java/org/apache/hadoop/yarn/sls/utils/SLSUtils.java b/hadoop-tools/hadoop-sls/src/main/java/org/apache/hadoop/yarn/sls/utils/SLSUtils.java\nindex 922370ce3f..d950aeeb92 100644\n--- a/hadoop-tools/hadoop-sls/src/main/java/org/apache/hadoop/yarn/sls/utils/SLSUtils.java\n+++ b/hadoop-tools/hadoop-sls/src/main/java/org/apache/hadoop/yarn/sls/utils/SLSUtils.java\n@@ -32,6 +32,7 @@\n import org.apache.hadoop.classification.InterfaceStability.Unstable;\n import org.apache.hadoop.conf.Configuration;\n import org.apache.hadoop.fs.Path;\n+import org.apache.hadoop.net.NodeBase;\n import org.apache.hadoop.tools.rumen.JobTraceReader;\n import org.apache.hadoop.tools.rumen.LoggedJob;\n import org.apache.hadoop.tools.rumen.LoggedTask;\n@@ -43,9 +44,15 @@\n @Unstable\n public class SLSUtils {\n \n+  // hostname includes the network path and the host name. for example\n+  // \"/default-rack/hostFoo\" or \"/coreSwitchA/TORSwitchB/hostBar\".\n+  // the function returns two Strings, the first element is the network\n+  // location without \"/\", the second element is the host name. for example,\n+  // {\"default-rack\", \"hostFoo\"} or \"coreSwitchA/TORSwitchB\", \"hostBar\"\n   public static String[] getRackHostName(String hostname) {\n-    hostname = hostname.substring(1);\n-    return hostname.split(\"/\");\n+    NodeBase node = new NodeBase(hostname);\n+    return new String[] {node.getNetworkLocation().substring(1),\n+        node.getName()};\n   }\n \n   /**\n",
+  "files": 1,
+  "linesAdd": 9,
+  "linesRem": 2,
+  "failing_tests": [
+    "org.apache.hadoop.yarn.sls.utils.TestSLSUtils.testGetRackHostname"
+  ],
+  "nb_test": 12,
+  "nb_failure": 1,
+  "nb_error": 0,
+  "nb_skipped": 0
+}

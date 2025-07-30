@@ -1,0 +1,21 @@
+{
+  "project": "hadoop",
+  "jira_id": "8775",
+  "commit": "a7998921",
+  "classification": {
+    "singleLine": false
+  },
+  "patch": "diff --git a/hadoop-mapreduce-project/hadoop-mapreduce-client/hadoop-mapreduce-client-core/src/main/java/org/apache/hadoop/mapreduce/lib/partition/InputSampler.java b/hadoop-mapreduce-project/hadoop-mapreduce-client/hadoop-mapreduce-client-core/src/main/java/org/apache/hadoop/mapreduce/lib/partition/InputSampler.java\nindex 82277a1f0b..72b47f282e 100644\n--- a/hadoop-mapreduce-project/hadoop-mapreduce-client/hadoop-mapreduce-client-core/src/main/java/org/apache/hadoop/mapreduce/lib/partition/InputSampler.java\n+++ b/hadoop-mapreduce-project/hadoop-mapreduce-client/hadoop-mapreduce-client-core/src/main/java/org/apache/hadoop/mapreduce/lib/partition/InputSampler.java\n@@ -317,7 +317,7 @@ public class InputSampler<K,V> extends Configured implements Tool  {\n     final InputFormat inf = \n         ReflectionUtils.newInstance(job.getInputFormatClass(), conf);\n     int numPartitions = job.getNumReduceTasks();\n-    K[] samples = (K[]) sampler.getSample(inf, job);\n+    K[] samples = sampler.getSample(inf, job);\n     LOG.info(\"Using \" + samples.length + \" samples\");\n     RawComparator<K> comparator =\n       (RawComparator<K>) job.getSortComparator();\ndiff --git a/hadoop-tools/hadoop-distcp/src/main/java/org/apache/hadoop/tools/OptionsParser.java b/hadoop-tools/hadoop-distcp/src/main/java/org/apache/hadoop/tools/OptionsParser.java\nindex fe78b70448..79487e59b9 100644\n--- a/hadoop-tools/hadoop-distcp/src/main/java/org/apache/hadoop/tools/OptionsParser.java\n+++ b/hadoop-tools/hadoop-distcp/src/main/java/org/apache/hadoop/tools/OptionsParser.java\n@@ -156,6 +156,10 @@ public class OptionsParser {\n       try {\n         Integer mapBandwidth = Integer.parseInt(\n             getVal(command, DistCpOptionSwitch.BANDWIDTH.getSwitch()).trim());\n+        if (mapBandwidth.intValue() <= 0) {\n+          throw new IllegalArgumentException(\"Bandwidth specified is not positive: \" +\n+              mapBandwidth);\n+        }\n         option.setMapBandwidth(mapBandwidth);\n       } catch (NumberFormatException e) {\n         throw new IllegalArgumentException(\"Bandwidth specified is invalid: \" +\n",
+  "files": 2,
+  "linesAdd": 5,
+  "linesRem": 1,
+  "failing_tests": [
+    "org.apache.hadoop.tools.mapred.TestUniformSizeInputFormat.testGetSplits",
+    "org.apache.hadoop.tools.mapred.TestCopyCommitter.testNoCommitAction",
+    "org.apache.hadoop.tools.mapred.TestCopyCommitter.testNoCommitAction"
+  ],
+  "nb_test": 109,
+  "nb_failure": 3,
+  "nb_error": 2,
+  "nb_skipped": 1
+}

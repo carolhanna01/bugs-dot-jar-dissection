@@ -1,0 +1,17 @@
+{
+  "project": "hadoop",
+  "jira_id": "2969",
+  "commit": "b4c8567e",
+  "classification": {
+    "singleLine": false
+  },
+  "patch": "diff --git a/hadoop-hdfs-project/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/protocol/ExtendedBlock.java b/hadoop-hdfs-project/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/protocol/ExtendedBlock.java\nindex 035e5c4292..05a2b6ec85 100644\n--- a/hadoop-hdfs-project/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/protocol/ExtendedBlock.java\n+++ b/hadoop-hdfs-project/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/protocol/ExtendedBlock.java\n@@ -145,7 +145,7 @@ public class ExtendedBlock implements Writable {\n       return false;\n     }\n     ExtendedBlock b = (ExtendedBlock)o;\n-    return b.block.equals(block) || b.poolId.equals(poolId);\n+    return b.block.equals(block) && b.poolId.equals(poolId);\n   }\n   \n   @Override // Object\ndiff --git a/hadoop-mapreduce-project/hadoop-mapreduce-client/hadoop-mapreduce-client-core/src/main/java/org/apache/hadoop/mapreduce/lib/partition/InputSampler.java b/hadoop-mapreduce-project/hadoop-mapreduce-client/hadoop-mapreduce-client-core/src/main/java/org/apache/hadoop/mapreduce/lib/partition/InputSampler.java\nindex 82277a1f0b..72b47f282e 100644\n--- a/hadoop-mapreduce-project/hadoop-mapreduce-client/hadoop-mapreduce-client-core/src/main/java/org/apache/hadoop/mapreduce/lib/partition/InputSampler.java\n+++ b/hadoop-mapreduce-project/hadoop-mapreduce-client/hadoop-mapreduce-client-core/src/main/java/org/apache/hadoop/mapreduce/lib/partition/InputSampler.java\n@@ -317,7 +317,7 @@ public class InputSampler<K,V> extends Configured implements Tool  {\n     final InputFormat inf = \n         ReflectionUtils.newInstance(job.getInputFormatClass(), conf);\n     int numPartitions = job.getNumReduceTasks();\n-    K[] samples = (K[]) sampler.getSample(inf, job);\n+    K[] samples = sampler.getSample(inf, job);\n     LOG.info(\"Using \" + samples.length + \" samples\");\n     RawComparator<K> comparator =\n       (RawComparator<K>) job.getSortComparator();\n",
+  "files": 2,
+  "linesAdd": 2,
+  "linesRem": 2,
+  "failing_tests": ["org.apache.hadoop.hdfs.protocol.TestExtendedBlock.testEquals"],
+  "nb_test": 1069,
+  "nb_failure": 1,
+  "nb_error": 1,
+  "nb_skipped": 1
+}

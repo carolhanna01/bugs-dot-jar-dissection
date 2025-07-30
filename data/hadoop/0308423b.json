@@ -1,0 +1,17 @@
+{
+  "project": "hadoop",
+  "jira_id": "8372",
+  "commit": "0308423b",
+  "classification": {
+    "singleLine": false
+  },
+  "patch": "diff --git a/hadoop-common-project/hadoop-common/src/main/java/org/apache/hadoop/net/NetUtils.java b/hadoop-common-project/hadoop-common/src/main/java/org/apache/hadoop/net/NetUtils.java\nindex 0fe61ad21c..b3c77c2033 100644\n--- a/hadoop-common-project/hadoop-common/src/main/java/org/apache/hadoop/net/NetUtils.java\n+++ b/hadoop-common-project/hadoop-common/src/main/java/org/apache/hadoop/net/NetUtils.java\n@@ -494,7 +494,7 @@ public class NetUtils {\n    * also takes a local address and port to bind the socket to. \n    * \n    * @param socket\n-   * @param address the remote address\n+   * @param endpoint the remote address\n    * @param localAddr the local address to bind the socket to\n    * @param timeout timeout in milliseconds\n    */\n@@ -549,17 +549,12 @@ public class NetUtils {\n    * @return its IP address in the string format\n    */\n   public static String normalizeHostName(String name) {\n-    if (Character.digit(name.charAt(0), 10) != -1) { // it is an IP\n-      return name;\n-    } else {\n     try {\n-        InetAddress ipAddress = InetAddress.getByName(name);\n-        return ipAddress.getHostAddress();\n+      return InetAddress.getByName(name).getHostAddress();\n     } catch (UnknownHostException e) {\n       return name;\n     }    \n   }\n-  }\n   \n   /** \n    * Given a collection of string representation of hosts, return a list of\ndiff --git a/hadoop-mapreduce-project/hadoop-mapreduce-client/hadoop-mapreduce-client-core/src/main/java/org/apache/hadoop/mapreduce/lib/partition/InputSampler.java b/hadoop-mapreduce-project/hadoop-mapreduce-client/hadoop-mapreduce-client-core/src/main/java/org/apache/hadoop/mapreduce/lib/partition/InputSampler.java\nindex 82277a1f0b..72b47f282e 100644\n--- a/hadoop-mapreduce-project/hadoop-mapreduce-client/hadoop-mapreduce-client-core/src/main/java/org/apache/hadoop/mapreduce/lib/partition/InputSampler.java\n+++ b/hadoop-mapreduce-project/hadoop-mapreduce-client/hadoop-mapreduce-client-core/src/main/java/org/apache/hadoop/mapreduce/lib/partition/InputSampler.java\n@@ -317,7 +317,7 @@ public class InputSampler<K,V> extends Configured implements Tool  {\n     final InputFormat inf = \n         ReflectionUtils.newInstance(job.getInputFormatClass(), conf);\n     int numPartitions = job.getNumReduceTasks();\n-    K[] samples = (K[]) sampler.getSample(inf, job);\n+    K[] samples = sampler.getSample(inf, job);\n     LOG.info(\"Using \" + samples.length + \" samples\");\n     RawComparator<K> comparator =\n       (RawComparator<K>) job.getSortComparator();\n",
+  "files": 2,
+  "linesAdd": 3,
+  "linesRem": 8,
+  "failing_tests": ["org.apache.hadoop.net.TestNetUtils.testNormalizeHostName"],
+  "nb_test": 1589,
+  "nb_failure": 1,
+  "nb_error": 0,
+  "nb_skipped": 16
+}

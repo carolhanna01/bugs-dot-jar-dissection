@@ -1,0 +1,20 @@
+{
+  "project": "hadoop",
+  "jira_id": "9286",
+  "commit": "513ec3de",
+  "classification": {
+    "singleLine": false
+  },
+  "patch": "diff --git a/hadoop-hdfs-project/hadoop-hdfs-httpfs/src/main/java/org/apache/hadoop/fs/http/server/FSOperations.java b/hadoop-hdfs-project/hadoop-hdfs-httpfs/src/main/java/org/apache/hadoop/fs/http/server/FSOperations.java\nindex 11cdb4d02c..57bf025f80 100644\n--- a/hadoop-hdfs-project/hadoop-hdfs-httpfs/src/main/java/org/apache/hadoop/fs/http/server/FSOperations.java\n+++ b/hadoop-hdfs-project/hadoop-hdfs-httpfs/src/main/java/org/apache/hadoop/fs/http/server/FSOperations.java\n@@ -1025,7 +1025,7 @@ public static class FSRemoveAclEntries implements FileSystemAccess.FileSystemExe\n      */\n     public FSRemoveAclEntries(String path, String aclSpec) {\n       this.path = new Path(path);\n-      this.aclEntries = AclEntry.parseAclSpec(aclSpec, true);\n+      this.aclEntries = AclEntry.parseAclSpec(aclSpec, false);\n     }\n \n     /**\n",
+  "files": 1,
+  "linesAdd": 1,
+  "linesRem": 1,
+  "failing_tests": [
+    "org.apache.hadoop.fs.http.server.TestHttpFSServerNoACLs.testWithNoAcls",
+    "org.apache.hadoop.fs.http.server.TestHttpFSServer.testFileAcls"
+  ],
+  "nb_test": 352,
+  "nb_failure": 2,
+  "nb_error": 6,
+  "nb_skipped": 0
+}

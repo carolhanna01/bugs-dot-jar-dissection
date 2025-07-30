@@ -31,7 +31,7 @@ def create_bug(project_path, branch_name, destination):
     FNULL = open(os.devnull, 'w')
 
     # Clone the repo to the destination
-    repo_url = "https://github.com/carolhanna01/jackrabbit.git"
+    repo_url = "https://github.com/carolhanna01/hadoop.git"
     cmd = "git clone %s %s" % (repo_url, destination)
     print(cmd)
     subprocess.check_call(cmd, shell=True, stdout=FNULL, stderr=FNULL)
@@ -157,7 +157,7 @@ def get_failing_tests(bug_path):
 
     return tests, total, failure, error, skipped
 
-project_name = "jackrabbit"
+project_name = "hadoop"
 project_path = os.path.join(REPOSITORIES_PATH, project_name)
 bug_project_path = os.path.join(BUGS_PATH, project_name)
 project_data_path = os.path.join(DATA_PATH, project_name)

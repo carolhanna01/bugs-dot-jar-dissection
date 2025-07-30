@@ -1,0 +1,17 @@
+{
+  "project": "hadoop",
+  "jira_id": "11646",
+  "commit": "bc159b5a",
+  "classification": {
+    "singleLine": false
+  },
+  "patch": "",
+  "files": 0,
+  "linesAdd": 0,
+  "linesRem": 0,
+  "failing_tests": [],
+  "nb_test": 3375,
+  "nb_failure": 0,
+  "nb_error": 1,
+  "nb_skipped": 9
+}
