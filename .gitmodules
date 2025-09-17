@@ -48,4 +48,4 @@
 	url = https://github.com/carolhanna01/hadoop.git
 [submodule "repositories/ambari"]
 	path = repositories/ambari
-	url = https://github.com/carolhanna01/ambari.git
+	url = https://github.com/carolhanna01/ambari
