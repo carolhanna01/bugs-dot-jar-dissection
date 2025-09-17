@@ -1,0 +1,17 @@
+{
+  "project": "solr",
+  "jira_id": "5777",
+  "commit": "79351129",
+  "classification": {
+    "singleLine": false
+  },
+  "patch": "diff --git a/lucene/analysis/common/src/java/org/apache/lucene/analysis/hunspell/Dictionary.java b/lucene/analysis/common/src/java/org/apache/lucene/analysis/hunspell/Dictionary.java\nindex b67a978fab..8a16602a54 100644\n--- a/lucene/analysis/common/src/java/org/apache/lucene/analysis/hunspell/Dictionary.java\n+++ b/lucene/analysis/common/src/java/org/apache/lucene/analysis/hunspell/Dictionary.java\n@@ -357,6 +357,25 @@ public class Dictionary {\n     return builder.finish();\n   }\n   \n+  static String escapeDash(String re) {\n+    // we have to be careful, even though dash doesn't have a special meaning,\n+    // some dictionaries already escape it (e.g. pt_PT), so we don't want to nullify it\n+    StringBuilder escaped = new StringBuilder();\n+    for (int i = 0; i < re.length(); i++) {\n+      char c = re.charAt(i);\n+      if (c == '-') {\n+        escaped.append(\"\\\\-\");\n+      } else {\n+        escaped.append(c);\n+        if (c == '\\\\' && i + 1 < re.length()) {\n+          escaped.append(re.charAt(i+1));\n+          i++;\n+        }\n+      }\n+    }\n+    return escaped.toString();\n+  }\n+\n   /**\n    * Parses a specific affix rule putting the result into the provided affix map\n    * \n@@ -425,7 +444,7 @@ public class Dictionary {\n       }\n       // \"dash hasn't got special meaning\" (we must escape it)\n       if (condition.indexOf('-') >= 0) {\n-        condition = condition.replace(\"-\", \"\\\\-\");\n+        condition = escapeDash(condition);\n       }\n \n       final String regex;\n",
+  "files": 1,
+  "linesAdd": 20,
+  "linesRem": 1,
+  "failing_tests": [],
+  "nb_test": 0,
+  "nb_failure": 0,
+  "nb_error": 0,
+  "nb_skipped": 0
+}

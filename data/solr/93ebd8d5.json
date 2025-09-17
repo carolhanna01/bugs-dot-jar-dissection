@@ -1,0 +1,17 @@
+{
+  "project": "solr",
+  "jira_id": "4300",
+  "commit": "93ebd8d5",
+  "classification": {
+    "singleLine": false
+  },
+  "patch": "diff --git a/lucene/core/src/java/org/apache/lucene/search/BooleanQuery.java b/lucene/core/src/java/org/apache/lucene/search/BooleanQuery.java\nindex 401fe9a9c4..a27e947511 100644\n--- a/lucene/core/src/java/org/apache/lucene/search/BooleanQuery.java\n+++ b/lucene/core/src/java/org/apache/lucene/search/BooleanQuery.java\n@@ -213,7 +213,11 @@ public class BooleanQuery extends Query implements Iterable<BooleanClause> {\n     }\n \n     public float coord(int overlap, int maxOverlap) {\n-      return similarity.coord(overlap, maxOverlap);\n+      // LUCENE-4300: in most cases of maxOverlap=1, BQ rewrites itself away,\n+      // so coord() is not applied. But when BQ cannot optimize itself away\n+      // for a single clause (minNrShouldMatch, prohibited clauses, etc), its\n+      // important not to apply coord(1,1) for consistency, it might not be 1.0F\n+      return maxOverlap == 1 ? 1F : similarity.coord(overlap, maxOverlap);\n     }\n \n     @Override\n",
+  "files": 1,
+  "linesAdd": 5,
+  "linesRem": 1,
+  "failing_tests": [],
+  "nb_test": 0,
+  "nb_failure": 0,
+  "nb_error": 0,
+  "nb_skipped": 0
+}

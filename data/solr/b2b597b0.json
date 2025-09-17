@@ -1,0 +1,17 @@
+{
+  "project": "solr",
+  "jira_id": "8502",
+  "commit": "b2b597b0",
+  "classification": {
+    "singleLine": false
+  },
+  "patch": "diff --git a/lucene/core/src/java/org/apache/lucene/index/FilterCodecReader.java b/lucene/core/src/java/org/apache/lucene/index/FilterCodecReader.java\nindex 4187051006..0f8dcfc8a6 100644\n--- a/lucene/core/src/java/org/apache/lucene/index/FilterCodecReader.java\n+++ b/lucene/core/src/java/org/apache/lucene/index/FilterCodecReader.java\n@@ -39,6 +39,15 @@ import org.apache.lucene.util.Bits;\n  * {@link #getCoreCacheHelper()} and {@link #getReaderCacheHelper()}.\n  */\n public abstract class FilterCodecReader extends CodecReader {\n+\n+  /** Get the wrapped instance by <code>reader</code> as long as this reader is\n+   *  an instance of {@link FilterCodecReader}.  */\n+  public static CodecReader unwrap(CodecReader reader) {\n+    while (reader instanceof FilterCodecReader) {\n+      reader = ((FilterCodecReader) reader).getDelegate();\n+    }\n+    return reader;\n+  }\n   /** \n    * The underlying CodecReader instance. \n    */\n@@ -127,6 +136,11 @@ public abstract class FilterCodecReader extends CodecReader {\n     in.checkIntegrity();\n   }\n \n+  /** Returns the wrapped {@link CodecReader}. */\n+  public CodecReader getDelegate() {\n+    return in;\n+  }\n+\n   /**\n    * Returns a filtered codec reader with the given live docs and numDocs.\n    */\n",
+  "files": 1,
+  "linesAdd": 14,
+  "linesRem": 0,
+  "failing_tests": [],
+  "nb_test": 0,
+  "nb_failure": 0,
+  "nb_error": 0,
+  "nb_skipped": 0
+}

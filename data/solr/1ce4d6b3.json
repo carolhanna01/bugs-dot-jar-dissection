@@ -1,0 +1,17 @@
+{
+  "project": "solr",
+  "jira_id": "16527",
+  "commit": "1ce4d6b3",
+  "classification": {
+    "singleLine": false
+  },
+  "patch": "diff --git a/solr/core/src/java/org/apache/solr/security/RuleBasedAuthorizationPluginBase.java b/solr/core/src/java/org/apache/solr/security/RuleBasedAuthorizationPluginBase.java\nindex 7c7de920e1..9615d6dfcd 100644\n--- a/solr/core/src/java/org/apache/solr/security/RuleBasedAuthorizationPluginBase.java\n+++ b/solr/core/src/java/org/apache/solr/security/RuleBasedAuthorizationPluginBase.java\n@@ -120,6 +120,9 @@ public abstract class RuleBasedAuthorizationPluginBase\n \n   /** Retrieves permission names for a given set of roles */\n   public Set<String> getPermissionNamesForRoles(Set<String> roles) {\n+    if (roles == null) {\n+      return Set.of();\n+    }\n     return roles.stream()\n         .filter(roleToPermissionsMap::containsKey)\n         .flatMap(r -> roleToPermissionsMap.get(r).stream())\n",
+  "files": 1,
+  "linesAdd": 3,
+  "linesRem": 0,
+  "failing_tests": [],
+  "nb_test": 0,
+  "nb_failure": 0,
+  "nb_error": 0,
+  "nb_skipped": 0
+}

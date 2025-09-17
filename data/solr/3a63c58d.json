@@ -1,0 +1,17 @@
+{
+  "project": "solr",
+  "jira_id": "8741",
+  "commit": "3a63c58d",
+  "classification": {
+    "singleLine": false
+  },
+  "patch": "diff --git a/lucene/queries/src/java/org/apache/lucene/queries/function/ValueSource.java b/lucene/queries/src/java/org/apache/lucene/queries/function/ValueSource.java\nindex 0cbfe89a46..1ba3580400 100644\n--- a/lucene/queries/src/java/org/apache/lucene/queries/function/ValueSource.java\n+++ b/lucene/queries/src/java/org/apache/lucene/queries/function/ValueSource.java\n@@ -32,7 +32,6 @@ import org.apache.lucene.search.IndexSearcher;\n import org.apache.lucene.search.LongValues;\n import org.apache.lucene.search.LongValuesSource;\n import org.apache.lucene.search.Scorable;\n-import org.apache.lucene.search.Scorer;\n import org.apache.lucene.search.SimpleFieldComparator;\n import org.apache.lucene.search.SortField;\n \n@@ -285,7 +284,7 @@ public abstract class ValueSource {\n \n     @Override\n     public FunctionValues getValues(Map context, LeafReaderContext readerContext) throws IOException {\n-      Scorer scorer = (Scorer) context.get(\"scorer\");\n+      Scorable scorer = (Scorable) context.get(\"scorer\");\n       DoubleValues scores = scorer == null ? null : DoubleValuesSource.fromScorer(scorer);\n \n       IndexSearcher searcher = (IndexSearcher) context.get(\"searcher\");\n",
+  "files": 1,
+  "linesAdd": 1,
+  "linesRem": 2,
+  "failing_tests": [],
+  "nb_test": 0,
+  "nb_failure": 0,
+  "nb_error": 0,
+  "nb_skipped": 0
+}
