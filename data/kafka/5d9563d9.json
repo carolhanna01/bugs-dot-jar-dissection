@@ -1,0 +1,17 @@
+{
+  "project": "kafka",
+  "jira_id": "5498",
+  "commit": "5d9563d9",
+  "classification": {
+    "singleLine": false
+  },
+  "patch": "diff --git a/clients/src/main/java/org/apache/kafka/common/config/ConfigDef.java b/clients/src/main/java/org/apache/kafka/common/config/ConfigDef.java\nindex 2514e4fadf..769d236351 100644\n--- a/clients/src/main/java/org/apache/kafka/common/config/ConfigDef.java\n+++ b/clients/src/main/java/org/apache/kafka/common/config/ConfigDef.java\n@@ -91,7 +91,9 @@ public class ConfigDef {\n     public ConfigDef(ConfigDef base) {\n         configKeys = new LinkedHashMap<>(base.configKeys);\n         groups = new LinkedList<>(base.groups);\n-        configsWithNoParent = base.configsWithNoParent == null ? null : new HashSet<>(base.configsWithNoParent);\n+        // It is not safe to copy this from the parent because we may subsequently add to the set of configs and\n+        // invalidate this\n+        configsWithNoParent = null;\n     }\n \n     /**\n@@ -528,7 +530,8 @@ public class ConfigDef {\n         return new ArrayList<>(undefinedConfigKeys);\n     }\n \n-    private Set<String> getConfigsWithNoParent() {\n+    // package accessible for testing\n+    Set<String> getConfigsWithNoParent() {\n         if (this.configsWithNoParent != null) {\n             return this.configsWithNoParent;\n         }\n",
+  "files": 1,
+  "linesAdd": 5,
+  "linesRem": 2,
+  "failing_tests": [],
+  "nb_test": 0,
+  "nb_failure": 0,
+  "nb_error": 0,
+  "nb_skipped": 0
+}
