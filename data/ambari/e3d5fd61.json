@@ -1,0 +1,17 @@
+{
+  "project": "ambari",
+  "jira_id": "11236",
+  "commit": "e3d5fd61",
+  "classification": {
+    "singleLine": false
+  },
+  "patch": "diff --git a/ambari-server/src/main/java/org/apache/ambari/server/checks/ServicesMaintenanceModeCheck.java b/ambari-server/src/main/java/org/apache/ambari/server/checks/ServicesMaintenanceModeCheck.java\nindex 2b5ff4952f..5108afd2d3 100644\n--- a/ambari-server/src/main/java/org/apache/ambari/server/checks/ServicesMaintenanceModeCheck.java\n+++ b/ambari-server/src/main/java/org/apache/ambari/server/checks/ServicesMaintenanceModeCheck.java\n@@ -50,7 +50,7 @@ public class ServicesMaintenanceModeCheck extends AbstractCheckDescriptor {\n     final Cluster cluster = clustersProvider.get().getCluster(clusterName);\n     for (Map.Entry<String, Service> serviceEntry : cluster.getServices().entrySet()) {\n       final Service service = serviceEntry.getValue();\n-      if (!service.isClientOnlyService() && (service.getDesiredState() != State.STARTED || service.getMaintenanceState() == MaintenanceState.ON)) {\n+      if (!service.isClientOnlyService() && service.getMaintenanceState() == MaintenanceState.ON) {\n         prerequisiteCheck.getFailedOn().add(service.getName());\n       }\n     }\n",
+  "files": 1,
+  "linesAdd": 1,
+  "linesRem": 1,
+  "failing_tests": [],
+  "nb_test": 2968,
+  "nb_failure": 1,
+  "nb_error": 0,
+  "nb_skipped": 21
+}

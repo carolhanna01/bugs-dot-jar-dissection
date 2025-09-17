@@ -9,7 +9,7 @@
   "files": 4,
   "linesAdd": 55,
   "linesRem": 24,
-  "failing_tests": ["org.apache.ambari.server.controller.AmbariCustomCommandExecutionHelperTest.testAvailableServicesMapIsEmptyWhenRepositoriesNotResolved"],
+  "failing_tests": [],
   "nb_test": 4993,
   "nb_failure": 1,
   "nb_error": 1,

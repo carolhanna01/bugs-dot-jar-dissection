@@ -1,0 +1,17 @@
+{
+  "project": "ambari",
+  "jira_id": "10189",
+  "commit": "6fae1889",
+  "classification": {
+    "singleLine": false
+  },
+  "patch": "diff --git a/ambari-server/src/main/java/org/apache/ambari/server/serveraction/upgrades/FinalizeUpgradeAction.java b/ambari-server/src/main/java/org/apache/ambari/server/serveraction/upgrades/FinalizeUpgradeAction.java\nindex 01bd9c76bc..586e98c973 100644\n--- a/ambari-server/src/main/java/org/apache/ambari/server/serveraction/upgrades/FinalizeUpgradeAction.java\n+++ b/ambari-server/src/main/java/org/apache/ambari/server/serveraction/upgrades/FinalizeUpgradeAction.java\n@@ -38,6 +38,8 @@ import org.apache.ambari.server.orm.entities.ClusterVersionEntity;\n import org.apache.ambari.server.orm.entities.HostComponentStateEntity;\n import org.apache.ambari.server.orm.entities.HostEntity;\n import org.apache.ambari.server.orm.entities.HostVersionEntity;\n+import org.apache.ambari.server.orm.entities.OperatingSystemEntity;\n+import org.apache.ambari.server.orm.entities.RepositoryEntity;\n import org.apache.ambari.server.serveraction.AbstractServerAction;\n import org.apache.ambari.server.state.Cluster;\n import org.apache.ambari.server.state.Clusters;\n@@ -204,6 +206,18 @@ public class FinalizeUpgradeAction extends AbstractServerAction {\n       outSB.append(String.format(\"Will finalize the version for cluster %s.\\n\", clusterName));\n       cluster.transitionClusterVersion(stackId, version, RepositoryVersionState.CURRENT);\n \n+      // !!! update the stack-defined repo url\n+      for (OperatingSystemEntity ose : upgradingClusterVersion.getRepositoryVersion().getOperatingSystems()) {\n+        for (RepositoryEntity re : ose.getRepositories()) {\n+          ambariMetaInfo.updateRepoBaseURL(\n+              upgradingClusterVersion.getRepositoryVersion().getStackName(),\n+              upgradingClusterVersion.getRepositoryVersion().getStackVersion(),\n+              ose.getOsType(),\n+              re.getRepositoryId(),\n+              re.getBaseUrl());\n+        }\n+      }\n+\n       outSB.append(\"Upgrade was successful!\\n\");\n       return createCommandReport(0, HostRoleStatus.COMPLETED, \"{}\", outSB.toString(), errSB.toString());\n     } catch (Exception e) {\n",
+  "files": 1,
+  "linesAdd": 14,
+  "linesRem": 0,
+  "failing_tests": [],
+  "nb_test": 2714,
+  "nb_failure": 1,
+  "nb_error": 0,
+  "nb_skipped": 14
+}

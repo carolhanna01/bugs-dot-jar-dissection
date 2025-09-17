@@ -1,0 +1,17 @@
+{
+  "project": "ambari",
+  "jira_id": "1628",
+  "commit": "b2fae8cb",
+  "classification": {
+    "singleLine": false
+  },
+  "patch": "diff --git a/ambari-server/src/main/java/org/apache/ambari/server/agent/HeartBeatHandler.java b/ambari-server/src/main/java/org/apache/ambari/server/agent/HeartBeatHandler.java\nindex df9735047d..861c7f7978 100644\n--- a/ambari-server/src/main/java/org/apache/ambari/server/agent/HeartBeatHandler.java\n+++ b/ambari-server/src/main/java/org/apache/ambari/server/agent/HeartBeatHandler.java\n@@ -238,15 +238,18 @@ public class HeartBeatHandler {\n               if (prevState.equals(State.INSTALLED)\n                   || prevState.equals(State.START_FAILED)\n                   || prevState.equals(State.STARTED)\n+                  || prevState.equals(State.STARTING)\n+                  || prevState.equals(State.STOPPING)\n                   || prevState.equals(State.STOP_FAILED)) {\n                 scHost.setState(liveState);\n-                if (!prevState.equals(liveState) && scHost.getServiceComponentName().equals(Role.HBASE_MASTER.toString())) {\n-                    scaner.updateHBaseMaster(scHost);\n                 LOG.info(\"State of service component \" + componentName\n                     + \" of service \" + status.getServiceName()\n                     + \" of cluster \" + status.getClusterName()\n                     + \" has changed from \" + prevState + \" to \" + liveState\n                     + \" at host \" + hostname);\n+                if (!prevState.equals(liveState)\n+                    && scHost.getServiceComponentName().equals(Role.HBASE_MASTER.toString())) {\n+                    scaner.updateHBaseMaster(scHost);\n                 }\n               }\n \ndiff --git a/ambari-server/src/main/java/org/apache/ambari/server/configuration/Configuration.java b/ambari-server/src/main/java/org/apache/ambari/server/configuration/Configuration.java\nindex 38fab71b74..fa77589d8b 100644\n--- a/ambari-server/src/main/java/org/apache/ambari/server/configuration/Configuration.java\n+++ b/ambari-server/src/main/java/org/apache/ambari/server/configuration/Configuration.java\n@@ -282,7 +282,7 @@ public class Configuration {\n \n   public String getBootSetupAgentScript() {\n     return properties.getProperty(BOOTSTRAP_SETUP_AGENT_SCRIPT,\n-        \"/usr/lib/python2.7/site-packages/ambari_server/setupAgent.py\");\n+        \"/usr/lib/python2.6/site-packages/ambari_server/setupAgent.py\");\n   }\n \n   public String getBootSetupAgentPassword() {\n",
+  "files": 2,
+  "linesAdd": 6,
+  "linesRem": 3,
+  "failing_tests": [],
+  "nb_test": 884,
+  "nb_failure": 1,
+  "nb_error": 0,
+  "nb_skipped": 1
+}

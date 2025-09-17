@@ -1,0 +1,17 @@
+{
+  "project": "ambari",
+  "jira_id": "12338",
+  "commit": "4b97eb77",
+  "classification": {
+    "singleLine": false
+  },
+  "patch": "diff --git a/ambari-server/src/main/java/org/apache/ambari/server/security/authorization/AmbariAuthorizationFilter.java b/ambari-server/src/main/java/org/apache/ambari/server/security/authorization/AmbariAuthorizationFilter.java\nindex 5a12d64a03..44c96135b3 100644\n--- a/ambari-server/src/main/java/org/apache/ambari/server/security/authorization/AmbariAuthorizationFilter.java\n+++ b/ambari-server/src/main/java/org/apache/ambari/server/security/authorization/AmbariAuthorizationFilter.java\n@@ -128,7 +128,8 @@ public class AmbariAuthorizationFilter implements Filter {\n             }\n           } else if (STACK_ADVISOR_REGEX.matcher(requestURI).matches()) {\n             //TODO permissions model doesn't manage stacks api, but we need access to stack advisor to save configs\n-            if (permissionId.equals(PermissionEntity.CLUSTER_OPERATE_PERMISSION)) {\n+            if (permissionId.equals(PermissionEntity.CLUSTER_READ_PERMISSION) ||\n+                permissionId.equals(PermissionEntity.CLUSTER_OPERATE_PERMISSION)) {\n               authorized = true;\n               break;\n             }\n",
+  "files": 1,
+  "linesAdd": 2,
+  "linesRem": 1,
+  "failing_tests": [],
+  "nb_test": 3077,
+  "nb_failure": 0,
+  "nb_error": 1,
+  "nb_skipped": 28
+}

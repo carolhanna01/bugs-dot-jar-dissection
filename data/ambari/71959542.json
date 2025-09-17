@@ -9,9 +9,7 @@
   "files": 1,
   "linesAdd": 1,
   "linesRem": 1,
-  "failing_tests": [
-    "org.apache.ambari.server.api.services.AmbariMetaInfoTest.testLatestVdf"
-  ],
+  "failing_tests": [],
   "nb_test": 5166,
   "nb_failure": 1,
   "nb_error": 0,

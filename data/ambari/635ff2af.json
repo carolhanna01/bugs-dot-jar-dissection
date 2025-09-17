@@ -1,0 +1,17 @@
+{
+  "project": "ambari",
+  "jira_id": "2618",
+  "commit": "635ff2af",
+  "classification": {
+    "singleLine": false
+  },
+  "patch": "diff --git a/ambari-server/src/main/java/org/apache/ambari/server/configuration/Configuration.java b/ambari-server/src/main/java/org/apache/ambari/server/configuration/Configuration.java\nindex 7e475b9dbf..780800386b 100644\n--- a/ambari-server/src/main/java/org/apache/ambari/server/configuration/Configuration.java\n+++ b/ambari-server/src/main/java/org/apache/ambari/server/configuration/Configuration.java\n@@ -170,6 +170,10 @@ public class Configuration {\n   public static final String SSL_TRUSTSTORE_PATH_KEY = \"ssl.trustStore.path\";\n   public static final String SSL_TRUSTSTORE_PASSWORD_KEY = \"ssl.trustStore.password\";\n   public static final String SSL_TRUSTSTORE_TYPE_KEY = \"ssl.trustStore.type\";\n+  public static final String JAVAX_SSL_TRUSTSTORE = \"javax.net.ssl.trustStore\";\n+  public static final String JAVAX_SSL_TRUSTSTORE_PASSWORD = \"javax.net.ssl.trustStorePassword\";\n+  public static final String JAVAX_SSL_TRUSTSTORE_TYPE = \"javax.net.ssl.trustStoreType\";\n+\n \n   private static final String SRVR_TWO_WAY_SSL_DEFAULT = \"false\";\n   private static final String SRVR_KSTR_DIR_DEFAULT = \".\";\n@@ -348,15 +352,22 @@ public class Configuration {\n   /**\n    * Loads trusted certificates store properties\n    */\n-  private void loadSSLParams(){\n+  void loadSSLParams(){\n     if (properties.getProperty(SSL_TRUSTSTORE_PATH_KEY) != null) {\n-      System.setProperty(\"javax.net.ssl.trustStore\", properties.getProperty(SSL_TRUSTSTORE_PATH_KEY));\n+      System.setProperty(JAVAX_SSL_TRUSTSTORE, properties.getProperty(SSL_TRUSTSTORE_PATH_KEY));\n     }\n     if (properties.getProperty(SSL_TRUSTSTORE_PASSWORD_KEY) != null) {\n-      System.setProperty(\"javax.net.ssl.trustStorePassword\", properties.getProperty(SSL_TRUSTSTORE_PASSWORD_KEY));\n+      String ts_password = readPasswordFromStore(\n+              properties.getProperty(SSL_TRUSTSTORE_PASSWORD_KEY));\n+      if (ts_password != null) {\n+        System.setProperty(JAVAX_SSL_TRUSTSTORE_PASSWORD, ts_password);\n+      } else {\n+        System.setProperty(JAVAX_SSL_TRUSTSTORE_PASSWORD,\n+                properties.getProperty(SSL_TRUSTSTORE_PASSWORD_KEY));\n+      }\n     }\n     if (properties.getProperty(SSL_TRUSTSTORE_TYPE_KEY) != null) {\n-      System.setProperty(\"javax.net.ssl.trustStoreType\", properties.getProperty(SSL_TRUSTSTORE_TYPE_KEY));\n+      System.setProperty(JAVAX_SSL_TRUSTSTORE_TYPE, properties.getProperty(SSL_TRUSTSTORE_TYPE_KEY));\n     }\n   }\n \n@@ -423,7 +434,7 @@ public class Configuration {\n \n   public String getBootSetupAgentScript() {\n     return properties.getProperty(BOOTSTRAP_SETUP_AGENT_SCRIPT,\n-        \"/usr/lib/python2.7/site-packages/ambari_server/setupAgent.py\");\n+        \"/usr/lib/python2.6/site-packages/ambari_server/setupAgent.py\");\n   }\n \n   public String getBootSetupAgentPassword() {\n@@ -588,7 +599,7 @@ public class Configuration {\n     }\n   }\n \n-  private String readPasswordFromStore(String aliasStr) {\n+  String readPasswordFromStore(String aliasStr) {\n     String password = null;\n     loadCredentialProvider();\n     if (credentialProvider != null) {\n",
+  "files": 1,
+  "linesAdd": 17,
+  "linesRem": 6,
+  "failing_tests": [],
+  "nb_test": 0,
+  "nb_failure": 0,
+  "nb_error": 0,
+  "nb_skipped": 0
+}

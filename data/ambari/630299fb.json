@@ -1,0 +1,21 @@
+{
+  "project": "ambari",
+  "jira_id": "12366",
+  "commit": "630299fb",
+  "classification": {
+    "singleLine": false
+  },
+  "patch": "diff --git a/ambari-server/src/main/java/org/apache/ambari/server/topology/Configuration.java b/ambari-server/src/main/java/org/apache/ambari/server/topology/Configuration.java\nindex 91b773698a..108ff7401e 100644\n--- a/ambari-server/src/main/java/org/apache/ambari/server/topology/Configuration.java\n+++ b/ambari-server/src/main/java/org/apache/ambari/server/topology/Configuration.java\n@@ -115,7 +115,11 @@ public class Configuration {\n    */\n   public Map<String, Map<String, String>> getFullProperties(int depthLimit) {\n     if (depthLimit == 0) {\n-      return new HashMap<String, Map<String, String>>(properties);\n+      HashMap<String, Map<String, String>> propertiesCopy = new HashMap<String, Map<String, String>>();\n+      for (Map.Entry<String, Map<String, String>> typeProperties : properties.entrySet()) {\n+        propertiesCopy.put(typeProperties.getKey(), new HashMap<String, String>(typeProperties.getValue()));\n+      }\n+      return propertiesCopy;\n     }\n \n     Map<String, Map<String, String>> mergedProperties = parentConfiguration == null ?\n@@ -159,8 +163,10 @@ public class Configuration {\n \n     for (Map.Entry<String, Map<String, Map<String, String>>> typeEntry : attributes.entrySet()) {\n       String type = typeEntry.getKey();\n-      Map<String, Map<String, String>> typeAttributes =\n-          new HashMap<String, Map<String, String>>(typeEntry.getValue());\n+      Map<String, Map<String, String>> typeAttributes = new HashMap<String, Map<String, String>>();\n+      for (Map.Entry<String, Map<String, String>> attributeEntry : typeEntry.getValue().entrySet()) {\n+        typeAttributes.put(attributeEntry.getKey(), new HashMap<String, String>(attributeEntry.getValue()));\n+      }\n \n       if (! mergedAttributeMap.containsKey(type)) {\n         mergedAttributeMap.put(type, typeAttributes);\n",
+  "files": 1,
+  "linesAdd": 9,
+  "linesRem": 3,
+  "failing_tests": [
+    "TestActionScheduler.testActionTimeout",
+    "ConfigurationTest.testGetFullProperties_withParent_specifyDepth",
+    "ConfigurationTest.testGetFullAttributes_withParent"
+  ],
+  "nb_test": 3088,
+  "nb_failure": 3,
+  "nb_error": 0,
+  "nb_skipped": 28
+}

@@ -1,0 +1,17 @@
+{
+  "project": "ambari",
+  "jira_id": "11229",
+  "commit": "27a22897",
+  "classification": {
+    "singleLine": false
+  },
+  "patch": "diff --git a/ambari-server/src/main/java/org/apache/ambari/server/controller/AmbariManagementControllerImpl.java b/ambari-server/src/main/java/org/apache/ambari/server/controller/AmbariManagementControllerImpl.java\nindex d1aebaef10..266d29969b 100644\n--- a/ambari-server/src/main/java/org/apache/ambari/server/controller/AmbariManagementControllerImpl.java\n+++ b/ambari-server/src/main/java/org/apache/ambari/server/controller/AmbariManagementControllerImpl.java\n@@ -323,7 +323,15 @@ public class AmbariManagementControllerImpl implements AmbariManagementControlle\n     uriBuilder.setScheme(masterProtocol);\n     uriBuilder.setHost(masterHostname);\n     uriBuilder.setPort(masterPort);\n+\n+    String[] parts = path.split(\"\\\\?\");\n+\n+    if (parts.length > 1) {\n+      uriBuilder.setPath(parts[0]);\n+      uriBuilder.setQuery(parts[1]);\n+    } else {\n       uriBuilder.setPath(path);\n+    }\n \n     return uriBuilder.toString();\n   }\n",
+  "files": 1,
+  "linesAdd": 8,
+  "linesRem": 0,
+  "failing_tests": [],
+  "nb_test": 2968,
+  "nb_failure": 2,
+  "nb_error": 0,
+  "nb_skipped": 21
+}

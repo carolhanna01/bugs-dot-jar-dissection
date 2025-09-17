@@ -1,0 +1,19 @@
+{
+  "project": "ambari",
+  "jira_id": "14848",
+  "commit": "69c83419",
+  "classification": {
+    "singleLine": false
+  },
+  "patch": "diff --git a/ambari-server/src/main/java/org/apache/ambari/server/upgrade/UpgradeCatalog221.java b/ambari-server/src/main/java/org/apache/ambari/server/upgrade/UpgradeCatalog221.java\nindex 13ec34594d..0f9d0e0e36 100644\n--- a/ambari-server/src/main/java/org/apache/ambari/server/upgrade/UpgradeCatalog221.java\n+++ b/ambari-server/src/main/java/org/apache/ambari/server/upgrade/UpgradeCatalog221.java\n@@ -198,6 +198,13 @@ public class UpgradeCatalog221 extends AbstractUpgradeCatalog {\n         alertDefinitionDAO.merge(alertDefinition);\n       }\n \n+      final AlertDefinitionEntity amsZookeeperProcessAlertDefinitionEntity = alertDefinitionDAO.findByName(\n+        clusterID, \"ams_metrics_collector_zookeeper_server_process\");\n+\n+      if (amsZookeeperProcessAlertDefinitionEntity != null) {\n+        LOG.info(\"Removing alert : ams_metrics_collector_zookeeper_server_process\");\n+        alertDefinitionDAO.remove(amsZookeeperProcessAlertDefinitionEntity);\n+      }\n     }\n   }\n \n",
+  "files": 1,
+  "linesAdd": 7,
+  "linesRem": 0,
+  "failing_tests": [
+    "org.apache.ambari.server.upgrade.UpgradeCatalog221Test.testUpdateAlertDefinitions"
+  ],
+  "nb_test": 3790,
+  "nb_failure": 1,
+  "nb_error": 0,
+  "nb_skipped": 31
+}

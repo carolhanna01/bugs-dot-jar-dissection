@@ -1,0 +1,17 @@
+{
+  "project": "ambari",
+  "jira_id": "1931",
+  "commit": "58dabba1",
+  "classification": {
+    "singleLine": false
+  },
+  "patch": "diff --git a/ambari-server/src/main/java/org/apache/ambari/server/configuration/Configuration.java b/ambari-server/src/main/java/org/apache/ambari/server/configuration/Configuration.java\nindex a427334cef..0e1be7a405 100644\n--- a/ambari-server/src/main/java/org/apache/ambari/server/configuration/Configuration.java\n+++ b/ambari-server/src/main/java/org/apache/ambari/server/configuration/Configuration.java\n@@ -327,7 +327,7 @@ public class Configuration {\n \n   public String getBootSetupAgentScript() {\n     return properties.getProperty(BOOTSTRAP_SETUP_AGENT_SCRIPT,\n-        \"/usr/lib/python2.7/site-packages/ambari_server/setupAgent.py\");\n+        \"/usr/lib/python2.6/site-packages/ambari_server/setupAgent.py\");\n   }\n \n   public String getBootSetupAgentPassword() {\ndiff --git a/ambari-server/src/main/java/org/apache/ambari/server/controller/internal/AbstractControllerResourceProvider.java b/ambari-server/src/main/java/org/apache/ambari/server/controller/internal/AbstractControllerResourceProvider.java\nindex 86eb99399d..cc1ce0d5d6 100644\n--- a/ambari-server/src/main/java/org/apache/ambari/server/controller/internal/AbstractControllerResourceProvider.java\n+++ b/ambari-server/src/main/java/org/apache/ambari/server/controller/internal/AbstractControllerResourceProvider.java\n@@ -125,26 +125,33 @@ public abstract class AbstractControllerResourceProvider extends AbstractResourc\n   }\n \n   /**\n-   * Extracting given query_paramater value from the predicate(parsed http body)\n+   * Extracting given query_paramater value from the predicate\n    * @param queryParameterId\n    * @param predicate\n    * @return\n    */\n   protected static Object getQueryParameterValue(String queryParameterId, Predicate predicate) {\n \n+    Object result = null;\n+\n     if (predicate instanceof ArrayPredicate) {\n       ArrayPredicate arrayPredicate  = (ArrayPredicate) predicate;\n       for (Predicate predicateItem : arrayPredicate.getPredicates()) {\n-        if (predicateItem instanceof ComparisonPredicate) {\n+          if (predicateItem instanceof EqualsPredicate) {\n             EqualsPredicate equalsPredicate =\n                 (EqualsPredicate) predicateItem;\n             if (queryParameterId.equals(equalsPredicate.getPropertyId())) {\n               return equalsPredicate.getValue();\n             }\n+          } else {\n+            result = getQueryParameterValue(queryParameterId, predicateItem);\n+            if (result != null) {\n+              return result;\n+          }\n         }\n       }\n \n     }\n-    return null;\n+    return result;\n   }\n }\n",
+  "files": 2,
+  "linesAdd": 11,
+  "linesRem": 4,
+  "failing_tests": [],
+  "nb_test": 983,
+  "nb_failure": 1,
+  "nb_error": 0,
+  "nb_skipped": 2
+}

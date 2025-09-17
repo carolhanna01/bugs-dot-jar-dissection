@@ -1,0 +1,17 @@
+{
+  "project": "ambari",
+  "jira_id": "1797",
+  "commit": "dba3fee7",
+  "classification": {
+    "singleLine": false
+  },
+  "patch": "diff --git a/ambari-server/src/main/java/org/apache/ambari/server/api/services/AmbariMetaInfo.java b/ambari-server/src/main/java/org/apache/ambari/server/api/services/AmbariMetaInfo.java\nindex 43845b8596..cf0e8822ce 100644\n--- a/ambari-server/src/main/java/org/apache/ambari/server/api/services/AmbariMetaInfo.java\n+++ b/ambari-server/src/main/java/org/apache/ambari/server/api/services/AmbariMetaInfo.java\n@@ -55,7 +55,7 @@ public class AmbariMetaInfo {\n   private static final String SERVICES_FOLDER_NAME = \"services\";\n   private static final String SERVICE_METAINFO_FILE_NAME = \"metainfo.xml\";\n   private static final String SERVICE_CONFIG_FOLDER_NAME = \"configuration\";\n-  private static final String SERVICE_CONFIG_FILE_NAME_POSTFIX = \"-site.xml\";\n+  private static final String SERVICE_CONFIG_FILE_NAME_POSTFIX = \".xml\";\n   private static final String REPOSITORY_FILE_NAME = \"repoinfo.xml\";\n   private static final String REPOSITORY_FOLDER_NAME = \"repos\";\n   private static final String REPOSITORY_XML_MAIN_BLOCK_NAME = \"os\";\ndiff --git a/ambari-server/src/main/java/org/apache/ambari/server/configuration/Configuration.java b/ambari-server/src/main/java/org/apache/ambari/server/configuration/Configuration.java\nindex b34f3e5f3a..5ec4659520 100644\n--- a/ambari-server/src/main/java/org/apache/ambari/server/configuration/Configuration.java\n+++ b/ambari-server/src/main/java/org/apache/ambari/server/configuration/Configuration.java\n@@ -326,7 +326,7 @@ public class Configuration {\n \n   public String getBootSetupAgentScript() {\n     return properties.getProperty(BOOTSTRAP_SETUP_AGENT_SCRIPT,\n-        \"/usr/lib/python2.7/site-packages/ambari_server/setupAgent.py\");\n+        \"/usr/lib/python2.6/site-packages/ambari_server/setupAgent.py\");\n   }\n \n   public String getBootSetupAgentPassword() {\n",
+  "files": 2,
+  "linesAdd": 2,
+  "linesRem": 2,
+  "failing_tests": [],
+  "nb_test": 953,
+  "nb_failure": 2,
+  "nb_error": 0,
+  "nb_skipped": 1
+}

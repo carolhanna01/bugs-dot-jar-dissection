@@ -9,7 +9,7 @@
   "files": 1,
   "linesAdd": 66,
   "linesRem": 9,
-  "failing_tests": ["org.apache.ambari.server.upgrade.UpgradeCatalog252Test.testUpdateKerberosDescriptorArtifact"],
+  "failing_tests": [],
   "nb_test": 4862,
   "nb_failure": 1,
   "nb_error": 0,
