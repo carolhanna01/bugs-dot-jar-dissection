@@ -1,0 +1,17 @@
+{
+  "project": "hadoop",
+  "jira_id": "6563",
+  "commit": "a4e0ff5e",
+  "classification": {
+    "singleLine": false
+  },
+  "patch": "diff --git a/hadoop-hdfs-project/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/server/namenode/FSImageFormatPBINode.java b/hadoop-hdfs-project/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/server/namenode/FSImageFormatPBINode.java\nindex fb8e3f6675..077570e8ee 100644\n--- a/hadoop-hdfs-project/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/server/namenode/FSImageFormatPBINode.java\n+++ b/hadoop-hdfs-project/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/server/namenode/FSImageFormatPBINode.java\n@@ -533,9 +533,11 @@ private void save(OutputStream out, INodeFile n) throws IOException {\n       INodeSection.INodeFile.Builder b = buildINodeFile(n,\n           parent.getSaverContext());\n \n+      if (n.getBlocks() != null) {\n         for (Block block : n.getBlocks()) {\n           b.addBlocks(PBHelper.convert(block));\n         }\n+      }\n \n       FileUnderConstructionFeature uc = n.getFileUnderConstructionFeature();\n       if (uc != null) {\ndiff --git a/hadoop-hdfs-project/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/server/namenode/snapshot/FileWithSnapshotFeature.java b/hadoop-hdfs-project/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/server/namenode/snapshot/FileWithSnapshotFeature.java\nindex e32f78a457..52adfc6dd6 100644\n--- a/hadoop-hdfs-project/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/server/namenode/snapshot/FileWithSnapshotFeature.java\n+++ b/hadoop-hdfs-project/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/server/namenode/snapshot/FileWithSnapshotFeature.java\n@@ -159,7 +159,7 @@ private void collectBlocksBeyondMax(final INodeFile file, final long max,\n         // resize the array.  \n         final BlockInfo[] newBlocks;\n         if (n == 0) {\n-          newBlocks = null;\n+          newBlocks = BlockInfo.EMPTY_ARRAY;\n         } else {\n           newBlocks = new BlockInfo[n];\n           System.arraycopy(oldBlocks, 0, newBlocks, 0, n);\n",
+  "files": 2,
+  "linesAdd": 3,
+  "linesRem": 1,
+  "failing_tests": [],
+  "nb_test": 2754,
+  "nb_failure": 0,
+  "nb_error": 1,
+  "nb_skipped": 100
+}

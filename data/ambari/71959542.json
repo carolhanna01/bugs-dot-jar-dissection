@@ -1,0 +1,19 @@
+{
+  "project": "ambari",
+  "jira_id": "24513",
+  "commit": "71959542",
+  "classification": {
+    "singleLine": false
+  },
+  "patch": "diff --git a/ambari-server/src/main/java/org/apache/ambari/server/upgrade/UpgradeCatalog270.java b/ambari-server/src/main/java/org/apache/ambari/server/upgrade/UpgradeCatalog270.java\nindex ed5c5281e9..98a549db1b 100644\n--- a/ambari-server/src/main/java/org/apache/ambari/server/upgrade/UpgradeCatalog270.java\n+++ b/ambari-server/src/main/java/org/apache/ambari/server/upgrade/UpgradeCatalog270.java\n@@ -622,7 +622,7 @@ public class UpgradeCatalog270 extends AbstractUpgradeCatalog {\n         PreparedStatement pstmt = dbAccessor.getConnection().prepareStatement(\"SELECT \" + USERS_USER_ID_COLUMN + \", \" + USERS_CREATE_TIME_COLUMN + \" FROM \" + USERS_TABLE + \" WHERE \" + temporaryColumnName + \" IS NULL ORDER BY \" + USERS_USER_ID_COLUMN);\n         ResultSet rs = pstmt.executeQuery()) {\n       while (rs.next()) {\n-        currentUserCreateTimes.put(rs.getInt(1), rs.getTimestamp(2));\n+        currentUserCreateTimes.put(rs.getInt(1), rs.getTimestamp(2) == null ? new Timestamp(System.currentTimeMillis()) : rs.getTimestamp(2));\n       }\n     }\n     return currentUserCreateTimes;\n",
+  "files": 1,
+  "linesAdd": 1,
+  "linesRem": 1,
+  "failing_tests": [
+    "org.apache.ambari.server.api.services.AmbariMetaInfoTest.testLatestVdf"
+  ],
+  "nb_test": 5166,
+  "nb_failure": 1,
+  "nb_error": 0,
+  "nb_skipped": 70
+}

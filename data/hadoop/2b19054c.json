@@ -1,0 +1,21 @@
+{
+  "project": "hadoop",
+  "jira_id": "9467",
+  "commit": "2b19054c",
+  "classification": {
+    "singleLine": false
+  },
+  "patch": "diff --git a/hadoop-common-project/hadoop-common/src/main/java/org/apache/hadoop/metrics2/MetricsFilter.java b/hadoop-common-project/hadoop-common/src/main/java/org/apache/hadoop/metrics2/MetricsFilter.java\nindex 47cbfba94a..3ba8140f6d 100644\n--- a/hadoop-common-project/hadoop-common/src/main/java/org/apache/hadoop/metrics2/MetricsFilter.java\n+++ b/hadoop-common-project/hadoop-common/src/main/java/org/apache/hadoop/metrics2/MetricsFilter.java\n@@ -57,7 +57,7 @@ public abstract class MetricsFilter implements MetricsPlugin {\n    * @return  true to accept; false otherwise.\n    */\n   public boolean accepts(MetricsRecord record) {\n-    return accepts(record.tags());\n+    return accepts(record.name()) && accepts(record.tags());\n   }\n \n }\n",
+  "files": 1,
+  "linesAdd": 1,
+  "linesRem": 1,
+  "failing_tests": [
+    "org.apache.hadoop.metrics2.filter.TestPatternFilter.excludeOnlyShouldOnlyExcludeMatched",
+    "org.apache.hadoop.metrics2.filter.TestPatternFilter.includeOnlyShouldOnlyIncludeMatched",
+    "org.apache.hadoop.metrics2.filter.TestPatternFilter.shouldAcceptUnmatchedWhenBothAreConfigured"
+  ],
+  "nb_test": 1896,
+  "nb_failure": 3,
+  "nb_error": 0,
+  "nb_skipped": 23
+}

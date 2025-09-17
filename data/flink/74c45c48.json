@@ -1,0 +1,17 @@
+{
+  "project": "flink",
+  "jira_id": "25949",
+  "commit": "74c45c48",
+  "classification": {
+    "singleLine": false
+  },
+  "patch": "diff --git a/flink-connectors/flink-connector-aws-kinesis-firehose/src/main/java/org/apache/flink/connector/firehose/sink/KinesisFirehoseSinkBuilder.java b/flink-connectors/flink-connector-aws-kinesis-firehose/src/main/java/org/apache/flink/connector/firehose/sink/KinesisFirehoseSinkBuilder.java\nindex a180abc6a9e..087fd6b28f9 100644\n--- a/flink-connectors/flink-connector-aws-kinesis-firehose/src/main/java/org/apache/flink/connector/firehose/sink/KinesisFirehoseSinkBuilder.java\n+++ b/flink-connectors/flink-connector-aws-kinesis-firehose/src/main/java/org/apache/flink/connector/firehose/sink/KinesisFirehoseSinkBuilder.java\n@@ -18,6 +18,7 @@\n package org.apache.flink.connector.firehose.sink;\n \n import org.apache.flink.annotation.PublicEvolving;\n+import org.apache.flink.annotation.VisibleForTesting;\n import org.apache.flink.api.common.serialization.SerializationSchema;\n import org.apache.flink.connector.base.sink.AsyncSinkBaseBuilder;\n \n@@ -135,10 +136,11 @@ public class KinesisFirehoseSinkBuilder<InputT>\n         return this;\n     }\n \n-    private Properties getClientPropertiesWithDefaultHttpProtocol() {\n+    @VisibleForTesting\n+    Properties getClientPropertiesWithDefaultHttpProtocol() {\n         Properties clientProperties =\n                 Optional.ofNullable(firehoseClientProperties).orElse(new Properties());\n-        clientProperties.putIfAbsent(HTTP_PROTOCOL_VERSION, DEFAULT_HTTP_PROTOCOL);\n+        clientProperties.putIfAbsent(HTTP_PROTOCOL_VERSION, DEFAULT_HTTP_PROTOCOL.toString());\n         return clientProperties;\n     }\n \n",
+  "files": 1,
+  "linesAdd": 4,
+  "linesRem": 2,
+  "failing_tests": [],
+  "nb_test": 0,
+  "nb_failure": 0,
+  "nb_error": 1,
+  "nb_skipped": 0
+}

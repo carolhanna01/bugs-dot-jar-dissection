@@ -1,0 +1,17 @@
+{
+  "project": "nifi",
+  "jira_id": "6020",
+  "commit": "3492313d",
+  "classification": {
+    "singleLine": false
+  },
+  "patch": "diff --git a/nifi-nar-bundles/nifi-framework-bundle/nifi-framework/nifi-web/nifi-web-api/src/main/java/org/apache/nifi/web/dao/impl/StandardPolicyBasedAuthorizerDAO.java b/nifi-nar-bundles/nifi-framework-bundle/nifi-framework/nifi-web/nifi-web-api/src/main/java/org/apache/nifi/web/dao/impl/StandardPolicyBasedAuthorizerDAO.java\nindex 2a2279e84d..8173a9bff7 100644\n--- a/nifi-nar-bundles/nifi-framework-bundle/nifi-framework/nifi-web/nifi-web-api/src/main/java/org/apache/nifi/web/dao/impl/StandardPolicyBasedAuthorizerDAO.java\n+++ b/nifi-nar-bundles/nifi-framework-bundle/nifi-framework/nifi-web/nifi-web-api/src/main/java/org/apache/nifi/web/dao/impl/StandardPolicyBasedAuthorizerDAO.java\n@@ -282,7 +282,10 @@ public class StandardPolicyBasedAuthorizerDAO implements AccessPolicyDAO, UserGr\n                     }\n \n                     // policy contains a group with the user\n-                    return !p.getGroups().stream().filter(g -> userGroupProvider.getGroup(g).getUsers().contains(userId)).collect(Collectors.toSet()).isEmpty();\n+                    return p.getGroups().stream().anyMatch(g -> {\n+                        final Group group = userGroupProvider.getGroup(g);\n+                        return group != null && group.getUsers().contains(userId);\n+                    });\n                 })\n                 .collect(Collectors.toSet());\n     }\n",
+  "files": 1,
+  "linesAdd": 4,
+  "linesRem": 1,
+  "failing_tests": [],
+  "nb_test": 131,
+  "nb_failure": 0,
+  "nb_error": 1,
+  "nb_skipped": 12
+}

@@ -1,0 +1,17 @@
+{
+  "project": "hadoop",
+  "jira_id": "9786",
+  "commit": "3ca892dc",
+  "classification": {
+    "singleLine": false
+  },
+  "patch": "diff --git a/hadoop-common-project/hadoop-common/src/main/java/org/apache/hadoop/io/retry/RetryInvocationHandler.java b/hadoop-common-project/hadoop-common/src/main/java/org/apache/hadoop/io/retry/RetryInvocationHandler.java\nindex 9d46d71141..9fc6ee1b40 100644\n--- a/hadoop-common-project/hadoop-common/src/main/java/org/apache/hadoop/io/retry/RetryInvocationHandler.java\n+++ b/hadoop-common-project/hadoop-common/src/main/java/org/apache/hadoop/io/retry/RetryInvocationHandler.java\n@@ -30,12 +30,13 @@\n import org.apache.hadoop.io.retry.RetryPolicy.RetryAction;\n import org.apache.hadoop.ipc.Client;\n import org.apache.hadoop.ipc.Client.ConnectionId;\n+import org.apache.hadoop.ipc.ProtocolTranslator;\n import org.apache.hadoop.ipc.RPC;\n import org.apache.hadoop.ipc.RpcConstants;\n import org.apache.hadoop.ipc.RpcInvocationHandler;\n import org.apache.hadoop.util.ThreadUtil;\n \n-import com.google.common.base.Preconditions;\n+import com.google.common.annotations.VisibleForTesting;\n \n class RetryInvocationHandler implements RpcInvocationHandler {\n   public static final Log LOG = LogFactory.getLog(RetryInvocationHandler.class);\n@@ -75,7 +76,7 @@ public Object invoke(Object proxy, Method method, Object[] args)\n     \n     // The number of times this method invocation has been failed over.\n     int invocationFailoverCount = 0;\n-    final boolean isRpc = isRpcInvocation();\n+    final boolean isRpc = isRpcInvocation(currentProxy);\n     final int callId = isRpc? Client.nextCallId(): RpcConstants.INVALID_CALL_ID;\n     int retries = 0;\n     while (true) {\n@@ -178,11 +179,15 @@ private Object invokeMethod(Method method, Object[] args) throws Throwable {\n     }\n   }\n \n-  private boolean isRpcInvocation() {\n-    if (!Proxy.isProxyClass(currentProxy.getClass())) {\n+  @VisibleForTesting\n+  static boolean isRpcInvocation(Object proxy) {\n+    if (proxy instanceof ProtocolTranslator) {\n+      proxy = ((ProtocolTranslator) proxy).getUnderlyingProxyObject();\n+    }\n+    if (!Proxy.isProxyClass(proxy.getClass())) {\n       return false;\n     }\n-    final InvocationHandler ih = Proxy.getInvocationHandler(currentProxy);\n+    final InvocationHandler ih = Proxy.getInvocationHandler(proxy);\n     return ih instanceof RpcInvocationHandler;\n   }\n \n",
+  "files": 1,
+  "linesAdd": 10,
+  "linesRem": 5,
+  "failing_tests": [],
+  "nb_test": 0,
+  "nb_failure": 0,
+  "nb_error": 0,
+  "nb_skipped": 0
+}

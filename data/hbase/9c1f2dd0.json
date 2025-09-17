@@ -1,0 +1,19 @@
+{
+  "project": "hbase",
+  "jira_id": "23953",
+  "commit": "9c1f2dd0",
+  "classification": {
+    "singleLine": true
+  },
+  "patch": "diff --git a/hbase-server/src/main/java/org/apache/hadoop/hbase/master/balancer/SimpleLoadBalancer.java b/hbase-server/src/main/java/org/apache/hadoop/hbase/master/balancer/SimpleLoadBalancer.java\nindex d3ccda4c97..c0538b81d3 100644\n--- a/hbase-server/src/main/java/org/apache/hadoop/hbase/master/balancer/SimpleLoadBalancer.java\n+++ b/hbase-server/src/main/java/org/apache/hadoop/hbase/master/balancer/SimpleLoadBalancer.java\n@@ -424,6 +424,7 @@ public class SimpleLoadBalancer extends BaseLoadBalancer {\n         addRegionPlan(regionsToMove, fetchFromTail,\n           server.getKey().getServerName(), regionsToReturn);\n         numTaken++;\n+        balanceInfo.setNumRegionsAdded(balanceInfo.getNumRegionsAdded() + 1);\n       }\n     }\n \n",
+  "files": 1,
+  "linesAdd": 1,
+  "linesRem": 0,
+  "failing_tests": [
+    "org.apache.hadoop.hbase.master.balancer.TestDefaultLoadBalancer.testBalanceClusterOverallStrictly"
+  ],
+  "nb_test": 1026,
+  "nb_failure": 1,
+  "nb_error": 0,
+  "nb_skipped": 4
+}

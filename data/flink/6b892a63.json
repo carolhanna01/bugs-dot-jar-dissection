@@ -1,0 +1,19 @@
+{
+  "project": "flink",
+  "jira_id": "9331",
+  "commit": "6b892a63",
+  "classification": {
+    "singleLine": true
+  },
+  "patch": "diff --git a/flink-mesos/src/main/java/org/apache/flink/mesos/runtime/clusterframework/MesosResourceManager.java b/flink-mesos/src/main/java/org/apache/flink/mesos/runtime/clusterframework/MesosResourceManager.java\nindex 4f4a6d1942c..9b5d50e1ac6 100644\n--- a/flink-mesos/src/main/java/org/apache/flink/mesos/runtime/clusterframework/MesosResourceManager.java\n+++ b/flink-mesos/src/main/java/org/apache/flink/mesos/runtime/clusterframework/MesosResourceManager.java\n@@ -616,6 +616,7 @@ public class MesosResourceManager extends ResourceManager<RegisteredMesosWorkerN\n \t\t\tassert(launched != null);\n \t\t\tLOG.info(\"Worker {} failed with status: {}, reason: {}, message: {}.\",\n \t\t\t\tid, status.getState(), status.getReason(), status.getMessage());\n+\t\t\tstartNewWorker(launched.profile());\n \t\t}\n \n \t\tcloseTaskManagerConnection(id, new Exception(status.getMessage()));\n",
+  "files": 1,
+  "linesAdd": 1,
+  "linesRem": 0,
+  "failing_tests": [
+    "org.apache.flink.mesos.runtime.clusterframework.MesosResourceManagerTest.testWorkerFailed"
+  ],
+  "nb_test": 147,
+  "nb_failure": 1,
+  "nb_error": 0,
+  "nb_skipped": 0
+}

@@ -1,0 +1,17 @@
+{
+  "project": "hadoop",
+  "jira_id": "108",
+  "commit": "d720ebc2",
+  "classification": {
+    "singleLine": false
+  },
+  "patch": "diff --git a/hadoop-mapreduce-project/hadoop-mapreduce-client/hadoop-mapreduce-client-core/src/main/java/org/apache/hadoop/mapreduce/lib/partition/InputSampler.java b/hadoop-mapreduce-project/hadoop-mapreduce-client/hadoop-mapreduce-client-core/src/main/java/org/apache/hadoop/mapreduce/lib/partition/InputSampler.java\nindex 82277a1f0b..72b47f282e 100644\n--- a/hadoop-mapreduce-project/hadoop-mapreduce-client/hadoop-mapreduce-client-core/src/main/java/org/apache/hadoop/mapreduce/lib/partition/InputSampler.java\n+++ b/hadoop-mapreduce-project/hadoop-mapreduce-client/hadoop-mapreduce-client-core/src/main/java/org/apache/hadoop/mapreduce/lib/partition/InputSampler.java\n@@ -317,7 +317,7 @@ public class InputSampler<K,V> extends Configured implements Tool  {\n     final InputFormat inf = \n         ReflectionUtils.newInstance(job.getInputFormatClass(), conf);\n     int numPartitions = job.getNumReduceTasks();\n-    K[] samples = (K[]) sampler.getSample(inf, job);\n+    K[] samples = sampler.getSample(inf, job);\n     LOG.info(\"Using \" + samples.length + \" samples\");\n     RawComparator<K> comparator =\n       (RawComparator<K>) job.getSortComparator();\ndiff --git a/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-common/src/main/java/org/apache/hadoop/yarn/util/FSDownload.java b/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-common/src/main/java/org/apache/hadoop/yarn/util/FSDownload.java\nindex 24a23c8c0c..a6c7b6e62a 100644\n--- a/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-common/src/main/java/org/apache/hadoop/yarn/util/FSDownload.java\n+++ b/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-common/src/main/java/org/apache/hadoop/yarn/util/FSDownload.java\n@@ -82,6 +82,13 @@ public class FSDownload implements Callable<Path> {\n     return resource;\n   }\n \n+  private void createDir(Path path, FsPermission perm) throws IOException {\n+    files.mkdir(path, perm, false);\n+    if (!perm.equals(files.getUMask().applyUMask(perm))) {\n+      files.setPermission(path, perm);\n+    }\n+  }\n+\n   private Path copy(Path sCopy, Path dstdir) throws IOException {\n     FileSystem sourceFs = sCopy.getFileSystem(conf);\n     Path dCopy = new Path(dstdir, sCopy.getName() + \".tmp\");\n@@ -144,9 +151,9 @@ public class FSDownload implements Callable<Path> {\n     } while (files.util().exists(tmp));\n     destDirPath = tmp;\n \n-    files.mkdir(destDirPath, cachePerms, false);\n+    createDir(destDirPath, cachePerms);\n     final Path dst_work = new Path(destDirPath + \"_tmp\");\n-    files.mkdir(dst_work, cachePerms, false);\n+    createDir(dst_work, cachePerms);\n \n     Path dFinal = files.makeQualified(new Path(dst_work, sCopy.getName()));\n     try {\n",
+  "files": 2,
+  "linesAdd": 10,
+  "linesRem": 3,
+  "failing_tests": ["org.apache.hadoop.yarn.util.TestFSDownload.testDownload"],
+  "nb_test": 99,
+  "nb_failure": 1,
+  "nb_error": 0,
+  "nb_skipped": 0
+}

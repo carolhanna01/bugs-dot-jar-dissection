@@ -1,0 +1,19 @@
+{
+  "project": "hbase",
+  "jira_id": "25644",
+  "commit": "190c253c",
+  "classification": {
+    "singleLine": false
+  },
+  "patch": "diff --git a/hbase-client/src/main/java/org/apache/hadoop/hbase/client/Scan.java b/hbase-client/src/main/java/org/apache/hadoop/hbase/client/Scan.java\nindex 708d6c7356..0be51c41ef 100644\n--- a/hbase-client/src/main/java/org/apache/hadoop/hbase/client/Scan.java\n+++ b/hbase-client/src/main/java/org/apache/hadoop/hbase/client/Scan.java\n@@ -895,7 +895,9 @@ public class Scan extends Query {\n   @Deprecated\n   public Scan setSmall(boolean small) {\n     this.small = small;\n+    if (small) {\n       this.readType = ReadType.PREAD;\n+    }\n     return this;\n   }\n \n",
+  "files": 1,
+  "linesAdd": 2,
+  "linesRem": 0,
+  "failing_tests": [
+    "org.apache.hadoop.hbase.client.TestScan.testScanReadType"
+  ],
+  "nb_test": 237,
+  "nb_failure": 1,
+  "nb_error": 0,
+  "nb_skipped": 0
+}

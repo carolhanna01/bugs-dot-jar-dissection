@@ -1,0 +1,17 @@
+{
+  "project": "hadoop",
+  "jira_id": "15025",
+  "commit": "49b4c0b3",
+  "classification": {
+    "singleLine": false
+  },
+  "patch": "diff --git a/hadoop-tools/hadoop-resourceestimator/src/main/java/org/apache/hadoop/resourceestimator/service/ResourceEstimatorService.java b/hadoop-tools/hadoop-resourceestimator/src/main/java/org/apache/hadoop/resourceestimator/service/ResourceEstimatorService.java\nindex 0e0e094310..5d3aea4fdc 100644\n--- a/hadoop-tools/hadoop-resourceestimator/src/main/java/org/apache/hadoop/resourceestimator/service/ResourceEstimatorService.java\n+++ b/hadoop-tools/hadoop-resourceestimator/src/main/java/org/apache/hadoop/resourceestimator/service/ResourceEstimatorService.java\n@@ -34,6 +34,7 @@\n import javax.ws.rs.Produces;\n import javax.ws.rs.core.MediaType;\n \n+import com.sun.jersey.spi.resource.Singleton;\n import org.apache.hadoop.conf.Configuration;\n import org.apache.hadoop.resourceestimator.common.api.RecurrenceId;\n import org.apache.hadoop.resourceestimator.common.api.ResourceSkyline;\n@@ -56,13 +57,13 @@\n import com.google.gson.Gson;\n import com.google.gson.GsonBuilder;\n import com.google.gson.reflect.TypeToken;\n-import com.google.inject.Singleton;\n \n /**\n  * Resource Estimator Service which provides a set of REST APIs for users to\n  * use the estimation service.\n  */\n-@Singleton @Path(\"/resourceestimator\") public class ResourceEstimatorService {\n+@Singleton\n+@Path(\"/resourceestimator\") public class ResourceEstimatorService {\n   private static final Logger LOGGER =\n       LoggerFactory.getLogger(ResourceEstimatorService.class);\n   private final SkylineStore skylineStore;\n",
+  "files": 1,
+  "linesAdd": 3,
+  "linesRem": 2,
+  "failing_tests": ["org.apache.hadoop.resourceestimator.service.TestResourceEstimatorService.testGetPrediction"],
+  "nb_test": 47,
+  "nb_failure": 0,
+  "nb_error": 1,
+  "nb_skipped": 0
+}

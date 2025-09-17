@@ -1,0 +1,17 @@
+{
+  "project": "hbase",
+  "jira_id": "22095",
+  "commit": "21cb00ee",
+  "classification": {
+    "singleLine": false
+  },
+  "patch": "diff --git a/hbase-server/src/main/java/org/apache/hadoop/hbase/master/snapshot/TakeSnapshotHandler.java b/hbase-server/src/main/java/org/apache/hadoop/hbase/master/snapshot/TakeSnapshotHandler.java\nindex 3b7d65a495..0d652646a1 100644\n--- a/hbase-server/src/main/java/org/apache/hadoop/hbase/master/snapshot/TakeSnapshotHandler.java\n+++ b/hbase-server/src/main/java/org/apache/hadoop/hbase/master/snapshot/TakeSnapshotHandler.java\n@@ -277,6 +277,7 @@ public abstract class TakeSnapshotHandler extends EventHandler implements Snapsh\n     URI workingURI = workingDirFs.getUri();\n     URI rootURI = fs.getUri();\n     if ((!workingURI.getScheme().equals(rootURI.getScheme()) ||\n+        workingURI.getAuthority() == null ||\n         !workingURI.getAuthority().equals(rootURI.getAuthority()) ||\n         workingURI.getUserInfo() == null ||\n         !workingURI.getUserInfo().equals(rootURI.getUserInfo()) ||\ndiff --git a/hbase-server/src/main/java/org/apache/hadoop/hbase/snapshot/SnapshotDescriptionUtils.java b/hbase-server/src/main/java/org/apache/hadoop/hbase/snapshot/SnapshotDescriptionUtils.java\nindex 39202c4b18..203a58b67a 100644\n--- a/hbase-server/src/main/java/org/apache/hadoop/hbase/snapshot/SnapshotDescriptionUtils.java\n+++ b/hbase-server/src/main/java/org/apache/hadoop/hbase/snapshot/SnapshotDescriptionUtils.java\n@@ -271,9 +271,11 @@ public final class SnapshotDescriptionUtils {\n    * @param conf configuration for the HBase cluster\n    * @return true if the given workingDir is a subdirectory of the default working directory for\n    *   snapshots, false otherwise\n+   * @throws IOException if we can't get the root dir\n    */\n-  public static boolean isWithinDefaultWorkingDir(final Path workingDir, Configuration conf) {\n-    Path defaultWorkingDir = getDefaultWorkingSnapshotDir(new Path(conf.get(HConstants.HBASE_DIR)));\n+  public static boolean isWithinDefaultWorkingDir(final Path workingDir, Configuration conf)\n+    throws IOException {\n+    Path defaultWorkingDir = getDefaultWorkingSnapshotDir(FSUtils.getRootDir(conf));\n     return workingDir.equals(defaultWorkingDir) || isSubDirectoryOf(workingDir, defaultWorkingDir);\n   }\n \n",
+  "files": 2,
+  "linesAdd": 5,
+  "linesRem": 2,
+  "failing_tests": ["org.apache.hadoop.hbase.snapshot.TestSnapshotDescriptionUtils.testIsWithinWorkingDir"],
+  "nb_test": 2140,
+  "nb_failure": 1,
+  "nb_error": 0,
+  "nb_skipped": 21
+}

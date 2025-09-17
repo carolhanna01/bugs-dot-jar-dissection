@@ -1,0 +1,20 @@
+{
+  "project": "hadoop",
+  "jira_id": "2968",
+  "commit": "a8e7f745",
+  "classification": {
+    "singleLine": false
+  },
+  "patch": "diff --git a/hadoop-hdfs-project/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/protocolPB/PBHelper.java b/hadoop-hdfs-project/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/protocolPB/PBHelper.java\nindex b30a077ee6..fab9f1f1c9 100644\n--- a/hadoop-hdfs-project/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/protocolPB/PBHelper.java\n+++ b/hadoop-hdfs-project/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/protocolPB/PBHelper.java\n@@ -767,8 +767,9 @@ public class PBHelper {\n     List<RecoveringBlockProto> list = recoveryCmd.getBlocksList();\n     List<RecoveringBlock> recoveringBlocks = new ArrayList<RecoveringBlock>(\n         list.size());\n-    for (int i = 0; i < list.size(); i++) {\n-      recoveringBlocks.add(PBHelper.convert(list.get(0)));\n+    \n+    for (RecoveringBlockProto rbp : list) {\n+      recoveringBlocks.add(PBHelper.convert(rbp));\n     }\n     return new BlockRecoveryCommand(recoveringBlocks);\n   }\ndiff --git a/hadoop-hdfs-project/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/server/protocol/BlockRecoveryCommand.java b/hadoop-hdfs-project/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/server/protocol/BlockRecoveryCommand.java\nindex 0c2e55e693..5f2ae8eb8d 100644\n--- a/hadoop-hdfs-project/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/server/protocol/BlockRecoveryCommand.java\n+++ b/hadoop-hdfs-project/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/server/protocol/BlockRecoveryCommand.java\n@@ -32,6 +32,8 @@ import org.apache.hadoop.io.Writable;\n import org.apache.hadoop.io.WritableFactories;\n import org.apache.hadoop.io.WritableFactory;\n \n+import com.google.common.base.Joiner;\n+\n /**\n  * BlockRecoveryCommand is an instruction to a data-node to recover\n  * the specified blocks.\n@@ -139,6 +141,15 @@ public class BlockRecoveryCommand extends DatanodeCommand {\n     recoveringBlocks.add(block);\n   }\n   \n+  @Override\n+  public String toString() {\n+    StringBuilder sb = new StringBuilder();\n+    sb.append(\"BlockRecoveryCommand(\\n  \");\n+    Joiner.on(\"\\n  \").appendTo(sb, recoveringBlocks);\n+    sb.append(\"\\n)\");\n+    return sb.toString();\n+  }\n+\n   ///////////////////////////////////////////\n   // Writable\n   ///////////////////////////////////////////\ndiff --git a/hadoop-mapreduce-project/hadoop-mapreduce-client/hadoop-mapreduce-client-core/src/main/java/org/apache/hadoop/mapreduce/lib/partition/InputSampler.java b/hadoop-mapreduce-project/hadoop-mapreduce-client/hadoop-mapreduce-client-core/src/main/java/org/apache/hadoop/mapreduce/lib/partition/InputSampler.java\nindex 82277a1f0b..72b47f282e 100644\n--- a/hadoop-mapreduce-project/hadoop-mapreduce-client/hadoop-mapreduce-client-core/src/main/java/org/apache/hadoop/mapreduce/lib/partition/InputSampler.java\n+++ b/hadoop-mapreduce-project/hadoop-mapreduce-client/hadoop-mapreduce-client-core/src/main/java/org/apache/hadoop/mapreduce/lib/partition/InputSampler.java\n@@ -317,7 +317,7 @@ public class InputSampler<K,V> extends Configured implements Tool  {\n     final InputFormat inf = \n         ReflectionUtils.newInstance(job.getInputFormatClass(), conf);\n     int numPartitions = job.getNumReduceTasks();\n-    K[] samples = (K[]) sampler.getSample(inf, job);\n+    K[] samples = sampler.getSample(inf, job);\n     LOG.info(\"Using \" + samples.length + \" samples\");\n     RawComparator<K> comparator =\n       (RawComparator<K>) job.getSortComparator();\n",
+  "files": 3,
+  "linesAdd": 15,
+  "linesRem": 3,
+  "failing_tests": [
+    "org.apache.hadoop.hdfs.protocolPB.TestPBHelper.testConvertBlockRecoveryCommand",
+    "org.apache.hadoop.hdfs.TestDecommission.testDecommissionFederation"
+  ],
+  "nb_test": 1089,
+  "nb_failure": 2,
+  "nb_error": 67,
+  "nb_skipped": 1
+}

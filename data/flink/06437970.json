@@ -1,0 +1,17 @@
+{
+  "project": "flink",
+  "jira_id": "9406",
+  "commit": "06437970",
+  "classification": {
+    "singleLine": false
+  },
+  "patch": "diff --git a/flink-runtime/src/main/java/org/apache/flink/runtime/jobmaster/JobMaster.java b/flink-runtime/src/main/java/org/apache/flink/runtime/jobmaster/JobMaster.java\nindex 1df9d89f201..aad81a13856 100644\n--- a/flink-runtime/src/main/java/org/apache/flink/runtime/jobmaster/JobMaster.java\n+++ b/flink-runtime/src/main/java/org/apache/flink/runtime/jobmaster/JobMaster.java\n@@ -619,7 +619,7 @@ public class JobMaster extends FencedRpcEndpoint<JobMasterId> implements JobMast\n \t\t\t\t\t\t.getProducer()\n \t\t\t\t\t\t.getCurrentExecutionAttempt();\n \n-\t\t\t\tif (producerExecution.getAttemptId() == resultPartitionId.getProducerId()) {\n+\t\t\t\tif (producerExecution.getAttemptId().equals(resultPartitionId.getProducerId())) {\n \t\t\t\t\treturn CompletableFuture.completedFuture(producerExecution.getState());\n \t\t\t\t} else {\n \t\t\t\t\treturn FutureUtils.completedExceptionally(new PartitionProducerDisposedException(resultPartitionId));\n",
+  "files": 1,
+  "linesAdd": 1,
+  "linesRem": 1,
+  "failing_tests": ["org.apache.flink.runtime.jobmaster.JobMasterTest.testRequestPartitionState"],
+  "nb_test": 2899,
+  "nb_failure": 0,
+  "nb_error": 1,
+  "nb_skipped": 8
+}
