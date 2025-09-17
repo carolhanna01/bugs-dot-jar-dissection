@@ -1,0 +1,19 @@
+{
+  "project": "calcite",
+  "jira_id": "670",
+  "commit": "d4d7ab99",
+  "classification": {
+    "singleLine": false
+  },
+  "patch": "diff --git a/avatica-server/src/main/java/org/apache/calcite/avatica/jdbc/JdbcMeta.java b/avatica-server/src/main/java/org/apache/calcite/avatica/jdbc/JdbcMeta.java\nindex 276dd71b5..3b241de6e 100644\n--- a/avatica-server/src/main/java/org/apache/calcite/avatica/jdbc/JdbcMeta.java\n+++ b/avatica-server/src/main/java/org/apache/calcite/avatica/jdbc/JdbcMeta.java\n@@ -184,6 +184,9 @@ public String defaultValue() {\n    */\n   protected static List<ColumnMetaData>\n   columns(ResultSetMetaData metaData) throws SQLException {\n+    if (metaData == null) {\n+      return Collections.emptyList();\n+    }\n     final List<ColumnMetaData> columns = new ArrayList<>();\n     for (int i = 1; i <= metaData.getColumnCount(); i++) {\n       final Type javaType =\n@@ -805,10 +808,15 @@ public Frame fetch(StatementHandle h, List<Object> parameterValues,\n             preparedStatement.setObject(i + 1, o);\n           }\n         }\n-        statementInfo.resultSet = preparedStatement.executeQuery();\n+        if (preparedStatement.execute()) {\n+          statementInfo.resultSet = preparedStatement.getResultSet();\n+        }\n+      }\n+      if (statementInfo.resultSet == null) {\n+        return Frame.EMPTY;\n+      } else {\n+        return JdbcResultSet.frame(statementInfo.resultSet, offset, fetchMaxRowCount);\n       }\n-      return JdbcResultSet.frame(statementInfo.resultSet, offset,\n-          fetchMaxRowCount);\n     } catch (SQLException e) {\n       throw propagate(e);\n     }\ndiff --git a/avatica/src/main/java/org/apache/calcite/avatica/AvaticaPreparedStatement.java b/avatica/src/main/java/org/apache/calcite/avatica/AvaticaPreparedStatement.java\nindex 9324db7e4..f85dcc186 100644\n--- a/avatica/src/main/java/org/apache/calcite/avatica/AvaticaPreparedStatement.java\n+++ b/avatica/src/main/java/org/apache/calcite/avatica/AvaticaPreparedStatement.java\n@@ -90,7 +90,8 @@ public ParameterMetaData getParameterMetaData() throws SQLException {\n   }\n \n   public int executeUpdate() throws SQLException {\n-    throw new UnsupportedOperationException(); // TODO:\n+    getConnection().executeQueryInternal(this, signature, null);\n+    return updateCount;\n   }\n \n   public void setNull(int parameterIndex, int sqlType) throws SQLException {\n@@ -186,7 +187,10 @@ public void setObject(int parameterIndex, Object x) throws SQLException {\n   }\n \n   public boolean execute() throws SQLException {\n-    throw new UnsupportedOperationException();\n+    getConnection().executeQueryInternal(this, signature, null);\n+    // Result set is null for DML or DDL.\n+    // Result set is closed if user cancelled the query.\n+    return openResultSet != null && !openResultSet.isClosed();\n   }\n \n   public void addBatch() throws SQLException {\n",
+  "files": 2,
+  "linesAdd": 17,
+  "linesRem": 5,
+  "failing_tests": [
+    "org.apache.calcite.avatica.RemoteDriverTest.testTypeHandling"
+  ],
+  "nb_test": 17,
+  "nb_failure": 1,
+  "nb_error": 0,
+  "nb_skipped": 4
+}

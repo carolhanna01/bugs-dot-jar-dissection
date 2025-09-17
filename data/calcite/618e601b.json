@@ -1,0 +1,17 @@
+{
+  "project": "calcite",
+  "jira_id": "6885",
+  "commit": "618e601b",
+  "classification": {
+    "singleLine": false
+  },
+  "patch": "diff --git a/core/src/main/java/org/apache/calcite/sql2rel/SqlToRelConverter.java b/core/src/main/java/org/apache/calcite/sql2rel/SqlToRelConverter.java\nindex 52a1cfc46..903332211 100644\n--- a/core/src/main/java/org/apache/calcite/sql2rel/SqlToRelConverter.java\n+++ b/core/src/main/java/org/apache/calcite/sql2rel/SqlToRelConverter.java\n@@ -3458,11 +3458,9 @@ private RexNode convertUsing(SqlValidatorNamespace leftNamespace,\n           validator().getTypeCoercion().commonTypeForBinaryComparison(\n               comparedTypes.get(0), comparedTypes.get(1));\n       if (resultType == null) {\n-        // This should never happen, since the program has been validated.\n-        throw new IllegalArgumentException(\"Cannot join on field `\" + name\n-            + \"` because the types are not comparable: \" + comparedTypes);\n-      }\n-\n+        // Leave call unchanged (as it happens in TypeCoercionImpl#binaryComparisonCoercion)\n+        list.add(rexBuilder.makeCall(SqlStdOperatorTable.EQUALS, operands));\n+      } else {\n         List<RexNode> castedOperands = new ArrayList<>();\n         for (int i = 0; i < operands.size(); i++) {\n           RexNode operand = operands.get(i);\n@@ -3475,6 +3473,7 @@ private RexNode convertUsing(SqlValidatorNamespace leftNamespace,\n         }\n         list.add(rexBuilder.makeCall(SqlStdOperatorTable.EQUALS, castedOperands));\n       }\n+    }\n     return RexUtil.composeConjunction(rexBuilder, list);\n   }\n \n",
+  "files": 1,
+  "linesAdd": 4,
+  "linesRem": 5,
+  "failing_tests": [],
+  "nb_test": 0,
+  "nb_failure": 0,
+  "nb_error": 0,
+  "nb_skipped": 0
+}
