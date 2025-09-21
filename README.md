@@ -1,19 +1,11 @@
-# Bugs.jar Benchmark
+# BugsDotJar-Dissection (Extended for HotBugs Metadata)
 
+This repository is a fork of [BugsDotJar-Dissection](https://github.com/tdurieux/bugs-dot-jar-dissection),  
+extended to generate metadata for [HotBugs.jar](https://github.com/carolhanna01/HotBugs-dot-jar) bugs.  
+The exported metadata (`meta-data.json`) is required by [Cerberus](<anonymous-cerberus-link>) to set up and run experiments.
 
-## Usage
+This fork currently contains metadata for 67 bugs generated from a subset of [HotBugs.jar](https://github.com/carolhanna01/HotBugs-dot-jar).
 
-Download Bugs.jar Benchmark
+---
 
-```bash
-git clone --recursive https://github.com/tdurieux/bugs-dot-jar-dissection
-```
-
-Checkout a specific bug (example: `-p accumulo -i 28294266`)
-
-```bash
-cd script;
-python bugs-dot-jar.py checkout -p <project> -i <commit_id>
-```
-
-
+Original project documentation lives in [bugs-dot-jar-dissection-readme.md](bugs-dot-jar-dissection-readme.md).
