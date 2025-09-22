@@ -3,7 +3,7 @@
 This repository is a fork of [BugsDotJar-Dissection](https://github.com/tdurieux/bugs-dot-jar-dissection), extended to generate metadata for [HotBugs.jar](https://github.com/carolhanna01/HotBugs-dot-jar) bugs.  
 
 The exported metadata (`meta-data.json`) is used by the BugsDotJar benchmark and required by  
-[Cerberus](<anonymous-cerberus-link>) to set up and run experiments.
+[Cerberus](https://anonymous.4open.science/r/cerberus-hot-fix-bugs) to set up and run experiments.
 
 This fork currently contains metadata for **67 bugs** generated from a subset of HotBugs.jar.
 
